@@ -20,7 +20,9 @@
       * {
         font-family: "Inter", sans-serif;
       }
-
+      body {
+        background: rgb(14, 23, 43);
+      }
       .gradient-text {
         background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);
         -webkit-background-clip: text;
@@ -43,7 +45,7 @@
 
       .grid-pattern {
         background-image: linear-gradient(
-            rgba(6, 182, 212, 0.1) 1px,
+            rgba(12, 182, 212, 0.1) 1px,
             transparent 1px
           ),
           linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
@@ -56,7 +58,7 @@
 
       .card-hover:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(6, 182, 212, 0.2);
+        box-shadow: 0 20px 40px rgba(6, 182, 212, 0.3);
       }
 
       .glow-effect {
@@ -80,12 +82,12 @@
       .float-animation {
         animation: float 6s ease-in-out infinite;
       }
-      .title-text{
-font-family: playfair;
+      .title-text {
+        font-family: playfair;
       }
     </style>
   </head>
-  <body class="bg-black text-gray-100">
+  <body class="body text-gray-100">
     <nav
       class="fixed top-0 w-full bg-black/80 backdrop-blur-lg border-b border-gray-800 z-50"
     >
@@ -106,7 +108,10 @@ font-family: playfair;
               <span class="text-white font-bold text-xl">C</span>
             </div>
             <div>
-              <div class="text-cyan-400 font-bold text-2xl"style="font-family: Playfair;">
+              <div
+                class="text-cyan-400 font-bold text-2xl"
+                style="font-family: Playfair"
+              >
                 Hackathon Nova 2026
               </div>
               <!-- <div class="text-cyan-400 text-xs">Hackathon Nova 2026</div> -->
@@ -209,6 +214,14 @@ font-family: playfair;
       id="hero"
       class="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient grid-pattern pt-16"
     >
+      <div
+        class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/30 to-orange-500/30 rounded-full blur-2xl"
+        style="transform: scale(1.1978) rotate(181.98deg)"
+      ></div>
+      <div
+        class="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-600/40 to-purple-600/40 rounded-full blur-3xl"
+        style="transform: scale(1.09498) rotate(94.5216deg)"
+      ></div>
       <div class="absolute inset-0 bg-black/40"></div>
 
       <div
@@ -216,12 +229,13 @@ font-family: playfair;
       >
         <div class="mb-6">
           <h2
-          class="text-xl md:text-3xl font-bold text-white mb-6 font-serif italic opacity-90"
-        >
-          CAPEC <span class="text-cyan-500 mx-2">×</span> ITEC-PEC
-        </h2>
+            class="text-xl md:text-3xl font-bold text-white mb-6 font-serif italic opacity-90"
+          >
+            CAPEC <span class="text-cyan-500 mx-2">×</span> ITEC-PEC
+          </h2>
           <span
             class="inline-block bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-2 rounded-full text-sm font-semibold"
+            style="margin-bottom: 10px"
           >
             January 26-29, 2026 | 48 Hours
           </span>
@@ -235,7 +249,6 @@ font-family: playfair;
           </h1>
         </div>
 
-        
         <br />
 
         <p class="text-xl sm:text-2xl text-gray-400 mb-4 max-w-3xl mx-auto">
@@ -298,7 +311,7 @@ font-family: playfair;
         >
           <a
             href="#register"
-            class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:shadow-xl hover:shadow-cyan-500/50 transition transform hover:scale-105 text-center"
+            class=" text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:shadow-xl hover:shadow-cyan-500/50 transition transform hover:scale-105 text-center" style="background-color: #B91C1C;"
           >
             Register Now <i class="fas fa-arrow-right ml-2"></i>
           </a>
@@ -321,7 +334,7 @@ font-family: playfair;
 
       <!-- Wavy Design -->
       <div
-        class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10"
+        class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z--1"
       >
         <svg
           class="relative block w-full h-24 md:h-32"
@@ -374,10 +387,17 @@ font-family: playfair;
               solutions.
             </p>
             <p class="text-gray-400 text-lg mb-6 leading-relaxed">
-              Organized by the Computer Association of Pokhara Engineering
-              College (CAPEC), this national-level hackathon provides a platform
-              for students, developers, and innovators to showcase their skills,
-              learn from industry experts, and compete for exciting prizes.
+              Organized by the
+              <span style="color: #22d3ee"
+                >Computer Association of Pokhara Engineering College
+                (CAPEC)</span
+              >
+              and
+              <span style="color: #a3e635"
+                >Information Technology Engineering Club -PEC(ITEC-PEC)</span
+              >, this national-level hackathon provides a platform for students,
+              developers, and innovators to showcase their skills, learn from
+              industry experts, and compete for exciting prizes.
             </p>
             <div
               class="bg-gradient-to-r from-cyan-500/10 to-blue-600/10 border border-cyan-500/30 rounded-lg p-6"
@@ -991,7 +1011,7 @@ font-family: playfair;
             <ul class="space-y-3 text-gray-400">
               <li class="flex items-start">
                 <i class="fas fa-check-circle text-cyan-400 mr-3 mt-1"></i>
-                <span>Teams must consist of 3 members</span>
+                <span>Teams must consist of 3-4 members</span>
               </li>
 
               <li class="flex items-start">
@@ -1437,7 +1457,7 @@ font-family: playfair;
         </div>
       </div>
     </section>
-<!-- sponsers -->
+    <!-- sponsers -->
     <section id="sponsors" class="py-20 bg-black">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
@@ -1463,7 +1483,10 @@ font-family: playfair;
             <div
               class="bg-gradient-to-br from-yellow-500/10 to-transparent border-2 border-yellow-500/50 rounded-2xl p-12 w-full max-w-md hover:shadow-2xl hover:shadow-yellow-500/30 transition"
             >
-             <img src="/assets/clz logo.jpeg" alt="pokhara Engineering College">
+              <img
+                src="/assets/clz logo.jpeg"
+                alt="pokhara Engineering College"
+              />
             </div>
           </div>
         </div>
@@ -1783,7 +1806,7 @@ font-family: playfair;
                 <i class="fas fa-users"></i>
               </div>
               <h3 class="text-xl font-bold text-white mb-2">Team Size</h3>
-              <p class="text-gray-400">2-5 members per team</p>
+              <p class="text-gray-400">3-4 members per team</p>
               <p class="text-gray-500 text-sm mt-2">
                 Solo participation allowed
               </p>
@@ -1796,7 +1819,9 @@ font-family: playfair;
               <h3 class="text-xl font-bold text-white mb-2">
                 Registration Fee
               </h3>
-              <p class="text-gray-400">NPR 500 per participant</p>
+              <p class="text-gray-400">
+                NPR <span style="color: #a3e635">3000</span> per participant
+              </p>
               <p class="text-gray-500 text-sm mt-2">Includes meals and swag</p>
             </div>
           </div>
