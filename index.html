@@ -88,6 +88,26 @@
       .title-text {
         font-family: playfair;
       }
+
+      /* Responsive improvements */
+      img { max-width: 100%; height: auto; display: block; }
+
+      /* Make hero title fluid from small to very large screens */
+      .title-text { font-size: clamp(2.5rem, 8vw, 7.5rem); line-height: 0.85; }
+
+      /* Slightly shorter hero on small devices to avoid excessive scrolling */
+      #hero { min-height: 80vh; }
+      @media (min-width: 768px) { #hero { min-height: 100vh; } }
+
+      /* Tweak hero background focus on small screens */
+      @media (max-width: 640px) {
+        .title-text { font-size: clamp(1.8rem, 9vw, 3.6rem); }
+        .hero-gradient { background-position: center; }
+      }
+
+      /* Ensure countdown scales down nicely */
+      #countdown .text-3xl { font-size: clamp(1.4rem, 4vw, 2rem); }
+
     </style>
   </head>
   <body class="body text-gray-100">
@@ -211,11 +231,11 @@
       class="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient grid-pattern pt-16"
     >
       <div
-        class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/30 to-orange-500/30 rounded-full blur-2xl"
+        class="hidden sm:block absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/30 to-orange-500/30 rounded-full blur-2xl"
         style="transform: scale(1.1978) rotate(181.98deg)"
       ></div>
       <div
-        class="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-600/40 to-purple-600/40 rounded-full blur-3xl"
+        class="hidden sm:block absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-600/40 to-purple-600/40 rounded-full blur-3xl"
         style="transform: scale(1.09498) rotate(94.5216deg)"
       ></div>
       <div class="absolute inset-0 bg-black/40"></div>
@@ -236,7 +256,7 @@
             January 26-29, 2026 | 60 Hours
           </span>
           <h1
-            class="text-7xl md:text-[10rem] font-black mb-8 tracking-tighter leading-[0.85] filter drop-shadow-2xl title-text bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent"
+            class="text-4xl sm:text-6xl md:text-8xl lg:text-[9rem] font-black mb-8 tracking-tighter leading-[0.85] filter drop-shadow-2xl title-text bg-gradient-to-r from-white via-red-100 to-white bg-clip-text text-transparent"
           >
             HACKATHON <br /><span
               class="bg-clip-text bg-gradient-to-r from-yellow-600 via-green-600 to-yellow-600 bg-[length:200%_auto] animate-gradient text-glow-cyan title-text"
@@ -307,13 +327,13 @@
         >
           <a
             href="#register"
-            class=" text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:shadow-xl hover:shadow-black-500/50 transition transform hover:scale-105 text-center bg-orange-500" 
+            class="w-full sm:w-auto text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:shadow-xl hover:shadow-black-500/50 transition transform hover:scale-105 text-center bg-orange-500" 
           >
             Register Now <i class="fas fa-arrow-right ml-2"></i>
           </a>
           <a
             href="#rules"
-            class="bg-white/5 backdrop-blur-sm border border-gray-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-white/10 transition text-center"
+            class="w-full sm:w-auto bg-white/5 backdrop-blur-sm border border-gray-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-white/10 transition text-center"
           >
             View Rules <i class="fas fa-book ml-2"></i>
           </a>
@@ -1330,34 +1350,34 @@
           </div>
 
           <div
-            class="bg-gradient-to-br from-gray-400/10 to-transparent border-2 border-gray-400/50 rounded-xl p-8 text-center card-hover relative overflow-hidden"
+            class="bg-gradient-to-br from-gray-400/10 to-transparent border-2 border-green-400/50 rounded-xl p-8 text-center card-hover relative overflow-hidden"
           >
             <div
-              class="absolute top-0 right-0 bg-gray-400 text-black px-4 py-1 text-sm font-bold rounded-bl-xl"
+              class="absolute top-0 right-0 bg-green-400 text-black px-4 py-1 text-sm font-bold rounded-bl-xl"
             >
               2ND PLACE
             </div>
-            <div class="text-7xl mb-6 text-gray-400">
+            <div class="text-7xl mb-6 text-green-400">
               <i class="fas fa-medal"></i>
             </div>
             <h3 class="text-3xl font-black text-white mb-4">NPR 20,000</h3>
             <ul class="text-left space-y-2 text-gray-300">
               <li>
-                <i class="fas fa-check text-gray-400 mr-2"></i> Cash Prize
+                <i class="fas fa-check text-green-400 mr-2"></i> Cash Prize
               </li>
               <li>
-                <i class="fas fa-check text-gray-400 mr-2"></i> Runner-up
+                <i class="fas fa-check text-green-400 mr-2"></i> Runner-up
                 Certificates
               </li>
               <li>
-                <i class="fas fa-check text-gray-400 mr-2"></i> Swag Package
+                <i class="fas fa-check text-green-400 mr-2"></i> Swag Package
               </li>
               <li>
-                <i class="fas fa-check text-gray-400 mr-2"></i> Mentorship
+                <i class="fas fa-check text-green-400 mr-2"></i> Mentorship
                 Opportunity
               </li>
               <li>
-                <i class="fas fa-check text-gray-400 mr-2"></i> Recognition
+                <i class="fas fa-check text-green-400 mr-2"></i> Recognition
               </li>
             </ul>
           </div>
