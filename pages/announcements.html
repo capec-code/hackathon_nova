@@ -123,106 +123,254 @@
                 <script src="../assets/js/supabase-config.js"></script>
                 <script src="../assets/js/supabase-client.js"></script>
                 <script>
-                    const container = document.getElementById('announcements-container');
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const container = document.getElementById('announcements-container');
 
-                    async function fetchAllAnnouncements() {
-                        try {
-                            if (typeof supabase === 'undefined' || !supabase) {
-                                container.innerHTML = `
-                                <div class="text-center py-10 bg-white/5 rounded-xl border border-white/10">
-                                    <i class="fas fa-exclamation-circle text-4xl text-yellow-500 mb-4"></i>
-                                    <h3 class="text-xl font-bold text-white mb-2">Setup Required</h3>
-                                    <p class="text-gray-400">Supabase connection not configured. Please check console.</p>
-                                </div>
-                            `;
-                                console.log('Supabase not configured.');
-                                return;
-                            }
+                        // Modal Elements
+                        const modal = document.getElementById('announcement-modal');
+                        const modalTitle = document.getElementById('modal-title');
+                        const modalDate = document.getElementById('modal-date');
+                        const modalType = document.getElementById('modal-type');
+                        const modalImageContainer = document.getElementById('modal-image-container');
+                        const modalImage = document.getElementById('modal-image');
+                        const modalPdfContainer = document.getElementById('modal-pdf-container');
+                        const modalPdfLink = document.getElementById('modal-pdf-link');
+                        const modalContent = document.getElementById('modal-content');
+                        const closeModalBtn = document.getElementById('close-modal');
 
-                            const { data, error } = await supabase
-                                .from('announcements')
-                                .select('*')
-                                .eq('is_active', true)
-                                .order('created_at', { ascending: false });
-
-                            if (error) throw error;
-
-                            if (!data || data.length === 0) {
-                                container.innerHTML = `
-                                <div class="text-center py-20 bg-white/5 rounded-xl border border-white/10">
-                                    <i class="far fa-folder-open text-5xl text-gray-600 mb-4"></i>
-                                    <h3 class="text-2xl font-bold text-white mb-2">No Announcements Yet</h3>
-                                    <p class="text-gray-400">Check back later for updates!</p>
-                                </div>
-                            `;
-                                return;
-                            }
-
-                            container.innerHTML = '';
-
-                            data.forEach(item => {
-                                const date = new Date(item.created_at).toLocaleDateString('en-US', {
-                                    year: 'numeric', month: 'long', day: 'numeric'
-                                });
-
-                                const typeColors = {
-                                    'Important': 'text-orange-400 bg-orange-500/10 border-orange-500/30 icon-orange-500',
-                                    'Update': 'text-blue-400 bg-blue-500/10 border-blue-500/30 icon-blue-500',
-                                    'Tip': 'text-green-400 bg-green-500/10 border-green-500/30 icon-green-500',
-                                    'General': 'text-gray-400 bg-gray-500/10 border-gray-500/30 icon-gray-400'
-                                };
-                                const badgeClass = typeColors[item.type] || typeColors['General'];
-
-                                const iconMap = {
-                                    'Important': 'fa-bullhorn',
-                                    'Update': 'fa-sync-alt',
-                                    'Tip': 'fa-lightbulb',
-                                    'General': 'fa-info-circle'
-                                };
-                                const iconClass = iconMap[item.type] || 'fa-info-circle';
-                                const iconColor = badgeClass.split(' ').pop().replace('icon-', 'text-'); // Extract color for icon
-
-                                const card = document.createElement('div');
-                                card.className = "bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-xl p-8 card-hover relative overflow-hidden group";
-                                card.innerHTML = `
-                                <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition">
-                                    <i class="fas ${iconClass} text-6xl text-white"></i>
-                                </div>
-                                <div class="flex items-center gap-4 mb-4">
-                                    <span class="${badgeClass.replace(/icon-[\w-]+/, '')} px-3 py-1 rounded-full text-sm font-semibold">
-                                        ${item.type}
-                                    </span>
-                                    <span class="text-gray-400 text-sm">
-                                        <i class="far fa-calendar-alt mr-2"></i>${date}
-                                    </span>
-                                </div>
-                                <h2 class="text-2xl font-bold text-white mb-3">${item.title}</h2>
-                                <p class="text-gray-300 leading-relaxed whitespace-pre-line">${item.content}</p>
-                            `;
-                                container.appendChild(card);
+                        // Make openModal global so onclick can find it
+                        window.openModal = function (item) {
+                            const date = new Date(item.created_at).toLocaleDateString('en-US', {
+                                year: 'numeric', month: 'long', day: 'numeric'
                             });
 
-                        } catch (error) {
-                            console.error('Error fetching announcements:', error);
-                            container.innerHTML = `
-                            <div class="text-center py-10 text-red-400">
-                                <p>Failed to load announcements. Please try refreshing the page.</p>
-                            </div>
-                        `;
+                            modalTitle.innerText = item.title;
+                            modalDate.innerHTML = `<i class="far fa-calendar-alt mr-2"></i>${date}`;
+                            modalType.innerText = item.type;
+                            modalContent.innerText = item.content;
+
+                            // Reset Attachments
+                            modalImageContainer.classList.add('hidden');
+                            modalPdfContainer.classList.add('hidden');
+
+                            if (item.attachment_url) {
+                                if (item.attachment_type === 'image') {
+                                    modalImageContainer.classList.remove('hidden');
+                                    modalImage.src = item.attachment_url;
+                                } else if (item.attachment_type === 'pdf') {
+                                    modalPdfContainer.classList.remove('hidden');
+                                    modalPdfLink.href = item.attachment_url;
+                                }
+                            }
+
+                            modal.classList.remove('hidden');
+                            document.body.style.overflow = 'hidden'; // Prevent scrolling
+                        };
+
+                        window.closeModal = function () {
+                            modal.classList.add('hidden');
+                            document.body.style.overflow = 'auto'; // Restore scrolling
+                        };
+
+                        if (closeModalBtn) closeModalBtn.addEventListener('click', window.closeModal);
+
+                        // Close on click outside
+                        if (modal) modal.addEventListener('click', (e) => {
+                            if (e.target === modal) window.closeModal();
+                        });
+
+
+                        async function fetchAllAnnouncements() {
+                            try {
+                                // Robust check for Supabase initialization
+                                let attempts = 0;
+                                while ((typeof supabase === 'undefined' || !supabase) && attempts < 20) {
+                                    await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms
+                                    attempts++;
+                                }
+
+                                if (typeof supabase === 'undefined' || !supabase) {
+                                    if (container) {
+                                        container.innerHTML = `
+                                            <div class="text-center py-10 bg-white/5 rounded-xl border border-white/10">
+                                                <i class="fas fa-exclamation-circle text-4xl text-yellow-500 mb-4"></i>
+                                                <h3 class="text-xl font-bold text-white mb-2">Setup Required</h3>
+                                                <p class="text-gray-400">Supabase connection not configured or slow connection. Please refresh.</p>
+                                            </div>
+                                        `;
+                                    }
+                                    console.error('Supabase failed to initialize after 2 seconds.');
+                                    return;
+                                }
+
+                                const { data, error } = await supabase
+                                    .from('announcements')
+                                    .select('*')
+                                    .eq('is_active', true)
+                                    .order('created_at', { ascending: false });
+
+                                if (error) throw error;
+
+                                if (!data || data.length === 0) {
+                                    if (container) {
+                                        container.innerHTML = `
+                                            <div class="text-center py-20 bg-white/5 rounded-xl border border-white/10">
+                                                <i class="far fa-folder-open text-5xl text-gray-600 mb-4"></i>
+                                                <h3 class="2xl font-bold text-white mb-2">No Announcements Yet</h3>
+                                                <p class="text-gray-400">Check back later for updates!</p>
+                                            </div>
+                                        `;
+                                    }
+                                    return;
+                                }
+
+                                if (container) container.innerHTML = '';
+
+                                // Store globally
+                                window.announcementsData = data;
+
+                                data.forEach((item, index) => {
+                                    const date = new Date(item.created_at).toLocaleDateString('en-US', {
+                                        year: 'numeric', month: 'long', day: 'numeric'
+                                    });
+
+                                    const typeColors = {
+                                        'Important': 'text-orange-400 bg-orange-500/10 border-orange-500/30 icon-orange-500',
+                                        'Update': 'text-blue-400 bg-blue-500/10 border-blue-500/30 icon-blue-500',
+                                        'Tip': 'text-green-400 bg-green-500/10 border-green-500/30 icon-green-500',
+                                        'General': 'text-gray-400 bg-gray-500/10 border-gray-500/30 icon-gray-400'
+                                    };
+                                    const badgeClass = typeColors[item.type] || typeColors['General'];
+
+                                    const iconMap = {
+                                        'Important': 'fa-bullhorn',
+                                        'Update': 'fa-sync-alt',
+                                        'Tip': 'fa-lightbulb',
+                                        'General': 'fa-info-circle'
+                                    };
+                                    const iconClass = iconMap[item.type] || 'fa-info-circle';
+
+                                    const card = document.createElement('div');
+                                    card.className = "bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-xl p-8 card-hover relative overflow-hidden group flex flex-col h-full";
+
+                                    // Attachment Indicator
+                                    let attachmentBadge = '';
+                                    if (item.attachment_url) {
+                                        attachmentBadge = `
+                                            <div class="absolute top-4 right-4 bg-white/10 backdrop-blur-md px-2 py-1 rounded-md text-xs text-gray-300 border border-white/10 z-10">
+                                                <i class="fas fa-paperclip mr-1"></i> Attachment
+                                            </div>
+                                        `;
+                                    }
+
+                                    card.innerHTML = `
+                                    ${attachmentBadge}
+                                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition z-0">
+                                        <i class="fas ${iconClass} text-6xl text-white"></i>
+                                    </div>
+                                    <div class="flex items-center gap-4 mb-4 z-10">
+                                        <span class="${badgeClass.replace(/icon-[\w-]+/, '')} px-3 py-1 rounded-full text-sm font-semibold">
+                                            ${item.type}
+                                        </span>
+                                        <span class="text-gray-400 text-sm">
+                                            <i class="far fa-calendar-alt mr-2"></i>${date}
+                                        </span>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-white mb-3 z-10">${item.title}</h2>
+                                    <p class="text-gray-300 leading-relaxed line-clamp-3 mb-6 flex-1 z-10 whitespace-pre-line">${item.content}</p>
+                                    
+                                    <button onclick="window.openModal(window.announcementsData[${index}])" 
+                                        class="inline-flex items-center text-orange-500 hover:text-orange-400 font-semibold transition z-10 self-start group/btn">
+                                        Read More <i class="fas fa-arrow-right ml-2 group-hover/btn:translate-x-1 transition-transform"></i>
+                                    </button>
+                                `;
+                                    if (container) container.appendChild(card);
+                                });
+
+                            } catch (error) {
+                                console.error('Error fetching announcements:', error);
+                                if (container) {
+                                    container.innerHTML = `
+                                        <div class="text-center py-10 text-red-400">
+                                            <p>Failed to load announcements. Please try refreshing the page.</p>
+                                        </div>
+                                    `;
+                                }
+                            }
                         }
-                    }
 
-                    setTimeout(fetchAllAnnouncements, 500);
+                        // Call immediately
+                        fetchAllAnnouncements();
+                    });
                 </script>
-
-                <div class="mt-12 text-center">
-                    <a href="../index.html"
-                        class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-3 rounded-lg font-bold hover:shadow-xl hover:shadow-orange-500/50 transition inline-block">
-                        <i class="fas fa-arrow-left mr-2"></i> Back to Home
-                    </a>
-                </div>
             </div>
     </section>
+
+    <!-- Announcement Detail Modal -->
+    <div id="announcement-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+
+                <div
+                    class="relative transform overflow-hidden rounded-2xl bg-[#0f172a] border border-gray-700 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+
+                    <!-- Header -->
+                    <div class="bg-gray-800/50 px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+                        <div>
+                            <span id="modal-type"
+                                class="px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/20">
+                                Typ
+                            </span>
+                        </div>
+                        <button id="close-modal" class="text-gray-400 hover:text-white transition">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="px-6 py-6 max-h-[70vh] overflow-y-auto">
+                        <h3 class="text-2xl font-bold text-white mb-2" id="modal-title">Announcement Title</h3>
+                        <p class="text-sm text-gray-500 mb-6" id="modal-date">Date</p>
+
+                        <!-- Image Container -->
+                        <div id="modal-image-container" class="mb-6 hidden">
+                            <img id="modal-image" src="" alt="Announcement Attachment"
+                                class="w-full h-auto rounded-xl border border-gray-700">
+                        </div>
+
+                        <!-- PDF Container -->
+                        <div id="modal-pdf-container"
+                            class="mb-6 hidden p-4 bg-white/5 rounded-xl border border-white/10 flex items-center justify-between">
+                            <div class="flex items-center text-gray-300">
+                                <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
+                                <span>Attached Document</span>
+                            </div>
+                            <a id="modal-pdf-link" href="#" target="_blank"
+                                class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
+                                <i class="fas fa-download mr-2"></i> Download
+                            </a>
+                        </div>
+
+                        <div class="prose prose-invert max-w-none text-gray-300 whitespace-pre-line" id="modal-content">
+                            <!-- Content goes here -->
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="bg-gray-800/30 px-6 py-4 border-t border-gray-700">
+                        <button onclick="closeModal()"
+                            class="w-full sm:w-auto bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="bg-gradient-to-b border-t border-gray-800 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

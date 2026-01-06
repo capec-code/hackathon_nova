@@ -86,6 +86,23 @@
                         placeholder="Announcement details..."></textarea>
                 </div>
 
+                <!-- Attachment -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Attachment (Optional)</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="file" id="file-upload" class="input-dark w-full rounded-lg px-4 py-3 text-sm text-gray-300 
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-orange-500 file:text-white
+                            hover:file:bg-orange-600 transition" accept="image/*,application/pdf">
+                    </div>
+                    <div id="current-attachment" class="mt-2 text-sm text-gray-400 hidden">
+                        Current: <a href="#" target="_blank"
+                            class="text-orange-500 hover:text-orange-400 underline truncate"></a>
+                    </div>
+                </div>
+
                 <!-- Actions -->
                 <div class="flex justify-end gap-4 pt-4 border-t border-gray-700">
                     <a href="dashboard.html"
@@ -117,6 +134,8 @@
         const form = document.getElementById('announcement-form');
         const saveBtn = document.getElementById('save-btn');
         const pageTitle = document.getElementById('page-title');
+        const currentAttachmentDiv = document.getElementById('current-attachment');
+        const currentAttachmentLink = currentAttachmentDiv.querySelector('a');
 
         // Check session
         async function checkSession() {
@@ -126,29 +145,68 @@
         }
 
         // Check if editing
+        // Check if editing
         const urlParams = new URLSearchParams(window.location.search);
         const editId = urlParams.get('id');
 
         async function loadAnnouncement(id) {
+            // Validate UUID format (basic check to catch template literal errors)
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(id)) {
+                console.error("Invalid ID format:", id);
+                alert("Invalid Announcement ID. Please return to the dashboard and refresh the page.");
+                return;
+            }
+
             pageTitle.innerText = 'Edit Announcement';
             saveBtn.innerHTML = 'Update Announcement';
 
-            const { data, error } = await supabase
-                .from('announcements')
-                .select('*')
-                .eq('id', id)
-                .single();
+            // Show loading
+            const originalBtnText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Data...';
 
-            if (data) {
-                document.getElementById('title').value = data.title;
-                document.getElementById('content').value = data.content;
-                document.getElementById('type').value = data.type;
-                document.getElementById('is-active').checked = data.is_active;
+            try {
+                if (typeof supabase === 'undefined') {
+                    throw new Error("Supabase client not initialized");
+                }
+
+                const { data, error } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                if (data) {
+                    document.getElementById('title').value = data.title;
+                    document.getElementById('content').value = data.content;
+                    document.getElementById('type').value = data.type;
+                    document.getElementById('is-active').checked = data.is_active;
+
+                    if (data.attachment_url) {
+                        currentAttachmentDiv.classList.remove('hidden');
+                        currentAttachmentLink.href = data.attachment_url;
+                        currentAttachmentLink.textContent = 'View Attachment (' + (data.attachment_type || 'File') + ')';
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading announcement:", err);
+                alert("Failed to load announcement: " + err.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = 'Update Announcement';
             }
         }
 
         if (editId) {
-            loadAnnouncement(editId);
+            // Check if it's the literal string "${item.id}" which indicates stale dashboard
+            if (editId.includes("${")) {
+                alert("Your dashboard page is outdated. Please go back and REFRESH the dashboard page.");
+            } else {
+                loadAnnouncement(editId);
+            }
         }
 
         form.addEventListener('submit', async (e) => {
@@ -158,10 +216,37 @@
             const content = document.getElementById('content').value;
             const type = document.getElementById('type').value;
             const isActive = document.getElementById('is-active').checked;
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             try {
-                saveBtn.disabled = true;
-                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                let attachmentUrl = null;
+                let attachmentType = null;
+
+                // Handle File Upload
+                if (file) {
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}.${fileExt}`;
+                    const filePath = `${fileName}`;
+
+                    attachmentType = file.type.startsWith('image/') ? 'image' : 'pdf'; // Simple classification
+
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('announcements')
+                        .upload(filePath, file);
+
+                    if (uploadError) throw uploadError;
+
+                    // Get Public URL
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('announcements')
+                        .getPublicUrl(filePath);
+
+                    attachmentUrl = publicUrl;
+                }
 
                 const payload = {
                     title,
@@ -169,6 +254,12 @@
                     type,
                     is_active: isActive
                 };
+
+                // Only update attachment fields if a new file was uploaded
+                if (attachmentUrl) {
+                    payload.attachment_url = attachmentUrl;
+                    payload.attachment_type = attachmentType;
+                }
 
                 let error;
 
