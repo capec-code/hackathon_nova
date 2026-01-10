@@ -318,18 +318,22 @@ function startTimer(startTime) {
 }
 
 function checkRestoreSession() {
-    // 1. Check URL for code (passed from landing page)
+    // 1. Check URL for code (priority from landing page scan)
     const urlParams = new URLSearchParams(window.location.search);
     const urlCode = urlParams.get('code');
     
-    if (urlCode) {
-        console.log("Auto-login via URL code:", urlCode);
+    if (urlCode && urlCode.trim() !== '') {
+        const normalizedCode = normalizeCode(urlCode);
+        console.log("Auto-login via URL code:", normalizedCode);
         
-        // Clean up URL to keep it tidy
+        // Clean URL immediately
         const newUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
         
-        handleCheckIn(urlCode);
+        // Save to storage for future sessions
+        localStorage.setItem('volunteer_code', normalizedCode);
+        
+        handleCheckIn(normalizedCode);
         return;
     }
 
