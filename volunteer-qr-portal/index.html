@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Hackathon Nova</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --primary: #3b82f6;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        p {
+            color: #94a3b8;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-msg {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <h1>Admin Portal</h1>
+        <p>Sign in to access your dashboard</p>
+
+        <form id="login-form">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="admin@hackathon-nova.com">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn" id="btn-login">Sign In</button>
+            <div id="error-msg" class="error-msg"></div>
+        </form>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://lhbipoprzdfzxkkrdpnw.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoYmlwb3ByemRmenhra3JkcG53Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2NDg1MzgsImV4cCI6MjA4MzIyNDUzOH0.fiKd-WlOPtEdY6TKVDy329_DngEL3UJg_6b36Vu5ZlQ';
+
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('btn-login');
+            const errorEl = document.getElementById('error-msg');
+
+            // Reset UI
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span> Authenticating...';
+            errorEl.style.display = 'none';
+
+            try {
+                // 1. Sign In
+                const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+                if (error) throw error;
+                if (!data.user) throw new Error("No user found");
+
+                btn.innerHTML = '<span class="loader"></span> Authorizing...';
+
+                // 2. Determine Role/Access (Probe RLS)
+                // We try checking access to 'attendance_capec' and 'attendance_itecpec'
+                // Whoever we can read from, that's our org.
+
+                // Check CAPEC
+                const { error: capecError } = await sb.from('attendance_capec').select('id').limit(1);
+                const isCapec = !capecError;
+
+                // Check ITEC-PEC
+                const { error: itecError } = await sb.from('attendance_itecpec').select('id').limit(1);
+                const isItec = !itecError;
+
+                let redirectTarget = null;
+
+                if (isCapec && isItec) {
+                    // Both? Probably Super Admin
+                    // Or check if there's a specific Super Admin table
+                    // For now, if both, maybe probe a super-admin specific table or default to super-admin
+                    redirectTarget = '/super-admin/';
+                } else if (isCapec) {
+                    // Redirect to CAPEC Admin
+                    // If deployed on admin.hackathon-nova.com, maybe it's /capec/ or similar?
+                    // But based on user request: "enters to cpec admin portal" (on admin domain)
+                    // I'll assume standard directory structure relative to this login
+                    redirectTarget = '/admin-capec/';
+                } else if (isItec) {
+                    redirectTarget = '/admin-itecpec/';
+                } else {
+                    // Check if Super Admin (maybe they have no access to attendance tables but different access?)
+                    // Let's assume Super Admin has access to ALL, so they would fall into the 'isCapec && isItec' case above
+                    // UNLESS audit_log access is the key?
+                    const { error: auditError } = await sb.from('audit_log').select('id').limit(1);
+                    if (!auditError) {
+                        redirectTarget = '/super-admin/';
+                    } else {
+                        throw new Error("Access Denied: You do not have permission to access any admin portal.");
+                    }
+                }
+
+                // Redirect
+                if (redirectTarget) {
+                    window.location.href = redirectTarget;
+                }
+
+            } catch (err) {
+                console.error("Login failed:", err);
+                errorEl.textContent = err.message || "Login failed";
+                errorEl.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+            }
+        });
+    </script>
+</body>
+
+</html>

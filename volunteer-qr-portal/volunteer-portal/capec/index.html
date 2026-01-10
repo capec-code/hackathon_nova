@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPEC Volunteer Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>CAPEC Volunteers</h1>
+            <div id="connection-status" class="status-indicator online">Online</div>
+        </header>
+
+        <main id="main-content">
+            <!-- View: Login / Scan -->
+            <section id="view-login" class="active">
+                <div class="card">
+                    <h2>Check In</h2>
+                    <p>Scan your badge or enter code manually.</p>
+
+                    <div id="scanner-container">
+                        <button id="btn-start-scan" class="btn secondary">📷 Scan Badge</button>
+                        <div id="qr-reader" style="width: 100%; display: none;"></div>
+                    </div>
+                    <p id="scan-error" class="error-msg"></p>
+
+                    <div class="divider">OR</div>
+
+                    <form id="login-form">
+                        <input type="text" id="manual-code" placeholder="Enter 8-digit Code" maxlength="8" required>
+                        <button type="submit" class="btn primary">Check In</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- View: Dashboard -->
+            <section id="view-dashboard" class="hidden">
+                <div class="card status-card">
+                    <div class="user-profile-header">
+                        <img id="user-profile-img" src="" style="display:none;" alt="Profile">
+                        <div id="user-avatar" class="animated-avatar">👤</div>
+                        <h2 id="user-name">Volunteer</h2>
+                    </div>
+                    <div class="timer-box">
+                        <span class="label">Time Logged Today</span>
+                        <div class="time-display" id="session-timer">00:00</div>
+                        <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+                            <div class="status-badge" id="current-status">Clocked In</div>
+                            <div class="status-badge" id="user-rank" style="background:var(--primary);">Rank: #--</div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="btn-view-qr" class="btn primary" style="margin-bottom:10px;">View My QR
+                            Code</button>
+                        <button id="btn-log-task" class="btn secondary">Log Activity</button>
+                        <button id="btn-checkout" class="btn danger">Clock Out</button>
+                    </div>
+                </div>
+
+                <div class="history-list">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>Recent History</h3>
+                        <button class="btn-text" onclick="showFullHistory()">View All</button>
+                    </div>
+                    <ul id="history-items">
+                        <!-- Items injected here -->
+                    </ul>
+                </div>
+            </section>
+
+            <!-- View: Task Logging -->
+            <section id="view-task" class="hidden">
+                <div class="card">
+                    <button id="btn-back-task" class="btn-text">← Back</button>
+                    <h2>Log Task</h2>
+                    <form id="task-form">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" name="title" required placeholder="e.g. Helped at registration">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" required>
+                                <option value="general">General Support</option>
+                                <option value="logistics">Logistics</option>
+                                <option value="technical">Technical</option>
+                                <option value="hospitality">Hospitality</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Time Spent (minutes)</label>
+                            <input type="number" name="minutes" min="1" max="480" required>
+                        </div>
+                        <button type="submit" class="btn primary">Submit Task</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- QR Code Modal -->
+        <div id="modal-qr" class="overlay hidden">
+            <div class="login-box" style="text-align:center;">
+                <h2>My QR Code</h2>
+                <div id="qr-display"
+                    style="margin: 20px auto; background:white; padding:20px; border-radius:12px; display:inline-block;">
+                </div>
+                <p id="qr-code-text" style="font-family:monospace; font-size:1.2rem; margin:15px 0;"></p>
+                <button class="btn secondary" onclick="closeQRModal()">Close</button>
+            </div>
+        </div>
+
+        <!-- Full History Modal -->
+        <div id="modal-history" class="overlay hidden">
+            <div class="login-box" style="text-align:left; max-width:500px; width:90%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2>Full History</h2>
+                    <button class="btn-text" onclick="closeHistory()">✕</button>
+                </div>
+                <div id="history-full-list" style="max-height:60vh; overflow-y:auto;">
+                    <ul class="history-items-full" id="history-items-full"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toasts -->
+        <div id="toast-container"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
