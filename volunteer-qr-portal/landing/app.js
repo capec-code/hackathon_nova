@@ -186,7 +186,7 @@ function handleSuccess(code, org, isRestored, participant = {}) {
     if (feedbackTimeout) clearTimeout(feedbackTimeout);
     feedbackTimeout = setTimeout(() => {
         const subdomain = org.toLowerCase() === 'capec' ? 'capec' : 'itecpec';
-        window.location.href = `https://${subdomain}.hackathon-nova.com/`;
+        window.location.href = `https://${subdomain}.hackathon-nova.com/?code=${code}`;
     }, 2500);
 }
 
