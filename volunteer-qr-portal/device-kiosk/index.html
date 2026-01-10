@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Kiosk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>Attendance Kiosk</h1>
+            <div id="kiosk-status" class="status-indicator">Initializing...</div>
+        </header>
+
+        <main class="kiosk-main">
+            <div class="scan-area">
+                <div id="qr-reader"></div>
+            </div>
+
+            <div class="info-area">
+                <h2 id="instruction-text">Scan Badge to Check In/Out</h2>
+
+                <div id="feedback-card" class="card hidden">
+                    <div id="feedback-icon" class="icon">✅</div>
+                    <h3 id="feedback-title">Success</h3>
+                    <p id="feedback-message">Welcome, Sajan!</p>
+                    <div id="feedback-time">10:00 AM</div>
+                </div>
+
+                <div class="kiosk-controls">
+                    <button id="btn-settings" class="btn-text">⚙️ Settings</button>
+                    <!-- Settings Modal -->
+                    <div id="settings-modal" class="modal hidden">
+                        <div class="modal-content">
+                            <h3>Kiosk Configuration</h3>
+                            <div class="form-group">
+                                <label>Device API Key</label>
+                                <input type="password" id="device-api-key" placeholder="Paste API Key here">
+                            </div>
+                            <div class="form-group">
+                                <label>Mode</label>
+                                <select id="kiosk-mode">
+                                    <option value="both">Check In & Out</option>
+                                    <option value="checkin">Check In Only</option>
+                                    <option value="checkout">Check Out Only</option>
+                                </select>
+                            </div>
+                            <div class="actions">
+                                <button id="btn-save-settings" class="btn primary">Save & Connect</button>
+                                <button id="btn-close-settings" class="btn secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="kiosk.js"></script>
+</body>
+
+</html>

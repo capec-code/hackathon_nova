@@ -1,0 +1,256 @@
+:root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #aaaaaa;
+    --accent-primary: #4caf50; /* Green for ITEC-PEC to distinguish? Or keep consistent? Request said "orange/green/blue accents". Let's use Green for ITEC. */
+    --accent-success: #4caf50;
+    --accent-danger: #f44336;
+    --border-color: #333;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    line-height: 1.6;
+}
+
+#app {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+h1 { font-size: 1.25rem; }
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.hidden { display: none !important; }
+
+/* Profile Header */
+.user-profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#user-profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.3);
+}
+
+.animated-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #1e293b, #334155);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border: 3px solid var(--primary);
+    position: relative;
+    overflow: hidden;
+    animation: avatarPulse 3s infinite ease-in-out;
+}
+
+.animated-avatar::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: linear-gradient(45deg, transparent, rgba(255, 23, 68, 0.1), transparent);
+    top: -25%;
+    left: -25%;
+    transform: rotate(45deg);
+    animation: avatarShine 4s infinite linear;
+}
+
+@keyframes avatarPulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.4); }
+    50% { transform: scale(1.03); box-shadow: 0 0 20px 0 rgba(255, 23, 68, 0.2); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.4); }
+}
+
+@keyframes avatarShine {
+    from { transform: translateX(-100%) rotate(45deg); }
+    to { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Buttons */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.btn.primary { background-color: var(--accent-primary); color: #fff; }
+.btn.secondary { background-color: #444; color: #fff; }
+.btn.danger { background-color: var(--accent-danger); color: #fff; }
+.btn-text { background: none; border: none; color: var(--text-secondary); cursor: pointer; margin-bottom: 15px; }
+
+/* Inputs */
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent-primary);
+}
+
+/* Status Card */
+.timer-box {
+    text-align: center;
+    margin: 20px 0;
+    background: #252525;
+    padding: 15px;
+    border-radius: 8px;
+}
+.time-display { font-size: 2rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    background: #333;
+    margin-top: 5px;
+}
+
+/* History */
+.history-list h3 { margin-bottom: 10px; font-size: 1rem; color: var(--text-secondary); }
+ul { list-style: none; }
+.history-item {
+    background: var(--card-bg);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.history-item .meta { font-size: 0.85rem; color: var(--text-secondary); }
+.history-item .status { font-size: 0.8rem; font-weight: bold; }
+.status-approved { color: var(--accent-success); }
+.status-pending { color: #ff9800; }
+.status-declined { color: var(--accent-danger); }
+
+/* QR Reader */
+#qr-reader {
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+#qr-reader video { object-fit: cover; }
+
+/* Toast */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    z-index: 1000;
+    text-align: center;
+}
+.toast {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s, fadeOut 0.3s 2.7s forwards;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { to { opacity: 0; } }
+
+/* Divider */
+.divider { text-align: center; margin: 15px 0; color: var(--text-secondary); font-size: 0.9rem; }
+.error-msg { color: var(--accent-danger); font-size: 0.9rem; margin-top: 5px; text-align: center; }
+
+/* Status Indicator */
+.status-indicator { font-size: 0.8rem; }
+.status-indicator.online { color: var(--accent-success); }
+.status-indicator.offline { color: var(--accent-danger); }
+
+/* Modal / Overlay */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+.login-box {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.history-items-full {
+    list-style: none;
+    padding: 0;
+}
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+.item-icon {
+    font-size: 1.5rem;
+    min-width: 40px;
+    height: 40px;
+    background: #2a2a2a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+.item-info { flex: 1; }
+.item-title { font-weight: 600; color: var(--text-primary); }
+.item-meta { font-size: 0.8rem; color: var(--text-secondary); }

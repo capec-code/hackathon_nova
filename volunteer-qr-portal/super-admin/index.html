@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin | Volunteer System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <!-- Auth Overlay -->
+    <div id="auth-overlay" class="overlay">
+        <div class="login-box">
+            <h2 style="margin-bottom:10px;">Super Admin Access</h2>
+            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px;">Restricted to System Administrators</p>
+            <button id="btn-login" class="btn primary">Sign In with Supabase</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="brand">
+            <span>SUPER</span> Admin
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-item active" data-view="dashboard">🌐 Overview</a></li>
+            <li><a href="#" class="nav-item" data-view="logs">📜 System Logs</a></li>
+            <li><a href="#" class="nav-item" data-view="users">👥 All Volunteers</a></li>
+            <li><a href="#" class="nav-item" data-view="leaderboard">🏆 Global Leaderboard</a></li>
+        </ul>
+        <div class="user-profile">
+            <div class="user-avatar" id="user-initials">S</div>
+            <div class="user-info">
+                <div class="user-name" id="user-email">Loading...</div>
+            </div>
+            <button class="btn-logout" id="btn-logout" title="Logout">🚪</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header-bar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+                <h1 id="page-title">System Overview</h1>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Volunteers</h3>
+                    <div class="value" id="total-vols">0</div>
+                    <div class="meta">
+                        <span class="tag capec">CAPEC: <span id="capec-vols">0</span></span>
+                        <span class="tag itec">ITEC: <span id="itec-vols">0</span></span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Shifts</h3>
+                    <div class="value" id="active-shifts">0</div>
+                    <div class="meta">Currently checked in</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Approvals</h3>
+                    <div class="value" id="pending-count">0</div>
+                    <div class="meta" style="color:var(--danger-color);">Needs Attention</div>
+                </div>
+            </div>
+
+            <!-- Org Links -->
+            <h2 style="margin-bottom:20px;">Organization Portals</h2>
+            <div class="org-links">
+                <a href="/admin-capec/" target="_blank" class="org-link-card">
+                    <div class="org-icon">🧡</div>
+                    <h3>CAPEC Admin</h3>
+                    <p style="font-size:0.8rem; color:#94a3b8; margin-top:5px;">Manage CAPEC Volunteers</p>
+                </a>
+                <a href="/admin-itecpec/" target="_blank" class="org-link-card">
+                    <div class="org-icon">💚</div>
+                    <h3>ITEC-PEC Admin</h3>
+                    <p style="font-size:0.8rem; color:#94a3b8; margin-top:5px;">Manage ITEC-PEC Volunteers</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Logs View -->
+        <div id="view-logs" class="view hidden">
+            <div class="card">
+                <h2>Global Audit Log</h2>
+                <div class="table-container">
+                    <table id="logs-table">
+                        <thead>
+                            <tr>
+                                <th>Ref</th>
+                                <th>Org</th>
+                                <th>Action</th>
+                                <th>Actor</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard View -->
+        <div id="view-leaderboard" class="view hidden">
+            <div class="card">
+                <h2>Global Contribution Leaderboard</h2>
+                <div class="table-container">
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Org</th>
+                                <th>Total Hours</th>
+                                <th>Tasks</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volunteers View -->
+        <div id="view-users" class="view hidden">
+            <div class="card">
+                <h2>All Volunteers</h2>
+                <div class="table-container">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Org</th>
+                                <th>Code</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW QR Modal -->
+        <div id="modal-view-qr" class="overlay hidden">
+            <div class="login-box" style="text-align:center;">
+                <h2>Volunteer Badge</h2>
+                <div id="qr-display" style="margin: 20px auto;"></div>
+                <h3 id="qr-vol-name"></h3>
+                <p id="qr-vol-code" style="font-family:monospace; font-size:1.2rem;"></p>
+                <button type="button" class="btn secondary"
+                    onclick="document.getElementById('modal-view-qr').classList.add('hidden')">Close</button>
+            </div>
+        </div>
+
+        <!-- Volunteer Detail Modal -->
+        <div id="modal-vol-detail" class="overlay hidden">
+            <div class="login-box" style="max-width: 800px; width: 95%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <img id="det-vol-image" src=""
+                            style="width:60px; height:60px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary); display:none;">
+                        <div id="det-vol-avatar"
+                            style="width:60px; height:60px; border-radius:50%; background: #333; display:flex; align-items:center; justify-content:center; font-size:1.5rem; border: 2px solid var(--primary);">
+                            👤</div>
+                        <div>
+                            <h2 id="det-vol-name">Volunteer Details</h2>
+                            <span id="det-vol-org" class="tag" style="margin-top:5px;">ITECPEC</span>
+                        </div>
+                    </div>
+                    <button class="btn secondary small" onclick="closeModal()">✕</button>
+                </div>
+
+                <div class="stats-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:20px;">
+                    <div class="stat-card" style="padding:15px;">
+                        <h4 style="font-size:0.8rem; margin-bottom:5px; color:#94a3b8;">Total Hours</h4>
+                        <div class="value" id="det-vol-hours" style="font-size:1.5rem;">0</div>
+                    </div>
+                    <div class="stat-card" style="padding:15px;">
+                        <h4 style="font-size:0.8rem; margin-bottom:5px; color:#94a3b8;">Approved Tasks</h4>
+                        <div class="value" id="det-vol-tasks" style="font-size:1.5rem;">0</div>
+                    </div>
+                </div>
+
+                <div class="tabs-sub"
+                    style="display:flex; gap:10px; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">
+                    <button class="btn small primary" id="btn-show-att"
+                        onclick="switchDetailTab('attendance')">Attendance</button>
+                    <button class="btn small secondary" id="btn-show-tasks"
+                        onclick="switchDetailTab('tasks')">Tasks</button>
+                </div>
+
+                <div id="det-attendance-view" class="table-container" style="max-height: 400px; overflow-y:auto;">
+                    <table class="simple-table" id="det-att-table">
+                        <thead>
+                            <tr>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="det-tasks-view" class="table-container hidden" style="max-height: 400px; overflow-y:auto;">
+                    <table class="simple-table" id="det-tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Task</th>
+                                <th>Mins</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

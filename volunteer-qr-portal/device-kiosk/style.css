@@ -1,0 +1,120 @@
+:root {
+    --bg-color: #000;
+    --card-bg: #111;
+    --text-primary: #fff;
+    --text-xl: 2.5rem;
+    --accent-success: #0aff60;
+    --accent-error: #ff3333;
+    --accent-info: #0088ff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+header {
+    background: #111;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+#qr-reader {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    aspect-ratio: 1/1;
+}
+
+.kiosk-main {
+    flex-direction: column; /* Stack on mobile */
+}
+
+@media (min-width: 768px) {
+    .kiosk-main {
+        flex-direction: row;
+    }
+    #qr-reader {
+        width: 600px;
+        height: 600px;
+    }
+}
+
+.info-area {
+    flex: 0 0 400px;
+    padding: 40px;
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+h2 { font-size: 2rem; margin-bottom: 40px; }
+
+.card {
+    background: #222;
+    padding: 30px;
+    border-radius: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.hidden { display: none; }
+
+.icon { font-size: 4rem; margin-bottom: 10px; }
+#feedback-message { font-size: 1.5rem; color: #ccc; }
+#feedback-time { font-size: 3rem; font-weight: bold; margin-top: 20px; }
+
+.feedback-success { border: 2px solid var(--accent-success); color: var(--accent-success); }
+.feedback-error { border: 2px solid var(--accent-error); color: var(--accent-error); }
+
+/* Modal */
+.modal {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999;
+}
+.modal-content {
+    background: #333;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+}
+input, select {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    background: #222;
+    border: 1px solid #555;
+    color: #fff;
+}
+.btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+}
+.btn.primary { background: var(--accent-info); color: white; }
+.btn.secondary { background: #555; color: white; margin-left: 10px; }
+.btn-text { background: none; border: none; color: #555; position: absolute; bottom: 20px; right: 20px; }
+
+.scan-area video { object-fit: cover; }

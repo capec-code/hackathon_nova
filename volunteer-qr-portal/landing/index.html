@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Volunteer Attendance & Activity Portal for Hackathon Nova">
+    <title>Volunteer Portal | Hackathon Nova</title>
+
+    <!-- Fix for missing trailing slash in URL -->
+    <script>
+        (function () {
+            // Only run if not opening file directly
+            if (window.location.protocol !== 'file:') {
+                var path = window.location.pathname;
+                // If path doesn't end in / and doesn't look like a file (dotted extension)
+                if (!path.endsWith('/') && !path.split('/').pop().includes('.')) {
+                    window.location.replace(path + '/' + window.location.search);
+                }
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Hackathon Nova</h1>
+            <p class="subtitle">Volunteer Attendance & Activity Portal</p>
+            <div id="org-badge" class="org-badge">Loading...</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+
+            <!-- Instructions Card -->
+            <section class="card instructions-card">
+                <div class="icon-circle">📱</div>
+                <h2>Welcome, Volunteer!</h2>
+                <p class="instructions-text">
+                    Scan your QR code on your ID card or enter your volunteer code manually to mark your attendance.
+                </p>
+                <div class="features">
+                    <div class="feature-item">
+                        <span class="check-icon">✓</span>
+                        <span>No login required</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="check-icon">✓</span>
+                        <span>One scan to check in</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QR Scanner Section -->
+            <section class="card scanner-card">
+                <h3>Scan QR Code</h3>
+                <div id="qr-reader" class="qr-reader"></div>
+                <button id="btn-start-scan" class="btn btn-primary">
+                    <span class="btn-icon">📷</span>
+                    Start Camera Scan
+                </button>
+                <p id="scan-status" class="status-text"></p>
+            </section>
+
+            <!-- Manual Entry Section -->
+            <section class="card manual-card">
+                <h3>Manual Code Entry</h3>
+                <p class="helper-text">Enter your 8-character volunteer code</p>
+                <form id="manual-form" class="manual-form">
+                    <input type="text" id="manual-code" class="code-input" placeholder="e.g., VOL12345" maxlength="8"
+                        autocomplete="off" required>
+                    <button type="submit" class="btn btn-secondary">
+                        Continue with Code
+                    </button>
+                </form>
+            </section>
+
+            <!-- Feedback Area -->
+            <div id="feedback-area" class="feedback-area hidden">
+                <div id="feedback-message" class="feedback-message"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">Powered by <strong>Hackathon Nova</strong></p>
+            <p class="help-text">💡 If camera fails, use manual code entry above</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>

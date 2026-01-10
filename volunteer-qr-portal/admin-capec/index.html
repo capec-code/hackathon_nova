@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPEC Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Auth Overlay -->
+    <div id="auth-overlay" class="overlay">
+        <div class="login-box">
+            <h2 style="text-align:center; margin-bottom:20px;">Admin Login (CAPEC)</h2>
+            <p id="auth-error" style="color:red; display:none; text-align:center;"></p>
+
+            <input type="email" id="login-email" placeholder="Email"
+                style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">
+            <input type="password" id="login-password" placeholder="Password"
+                style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ddd; border-radius:4px;">
+
+            <button id="btn-login-email" class="btn primary" style="width:100%;">Sign In</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="brand">
+            <span>CAPEC</span> Admin
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-item active" data-view="dashboard">📊 Dashboard</a></li>
+            <li><a href="#" class="nav-item" data-view="approvals">✅ Approvals <span id="badge-approvals" class="badge"
+                        style="background:var(--danger-color); margin-left:auto; display:none;">0</span></a></li>
+            <li><a href="#" class="nav-item" data-view="volunteers">👥 Volunteers</a></li>
+            <li><a href="#" class="nav-item" data-view="leaderboard">🏆 Leaderboard</a></li>
+            <li><a href="#" class="nav-item" data-view="daily-activity">📅 Daily Activity</a></li>
+            <li><a href="#" class="nav-item" data-view="scan">📷 Scan Badge</a></li>
+            <li><a href="#" class="nav-item" data-view="reports">📈 Reports</a></li>
+        </ul>
+        <div class="user-profile">
+            <div class="user-avatar" id="user-initials">A</div>
+            <div class="user-info">
+                <div class="user-name" id="user-email">Loading...</div>
+            </div>
+            <button class="btn-logout" id="btn-logout" title="Logout">🚪</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header-bar">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+                <h1 id="page-title">CAPEC Dashboard</h1>
+            </div>
+            <div>
+                <!-- Right header actions if needed -->
+            </div>
+        </div>
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view hidden">
+            <header>
+                <h1>Dashboard</h1>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <h3>Active Now</h3>
+                        <div class="value" id="stat-active">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Tasks</h3>
+                        <div class="value" id="stat-pending">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Hours</h3>
+                        <div class="value" id="stat-hours">0</div>
+                    </div>
+                </div>
+            </header>
+            <div class="chart-container">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <ul id="activity-list"></ul>
+            </div>
+        </div>
+
+        <!-- Approvals View -->
+        <div id="view-approvals" class="view hidden">
+            <h1>Pending Approvals</h1>
+            <div class="filter-bar">
+                <select id="filter-type" onchange="loadApprovals()" class="form-select">
+                    <option value="all">All Types</option>
+                    <option value="attendance">Attendance</option>
+                    <option value="task">Tasks</option>
+                </select>
+                <select id="filter-status" onchange="loadApprovals()" class="form-select">
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="declined">Declined</option>
+                </select>
+                <button class="btn small" onclick="loadApprovals()">🔄 Refresh</button>
+            </div>
+            <div class="table-container">
+                <table id="approvals-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Volunteer</th>
+                            <th>Details</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Volunteers View -->
+        <div id="view-volunteers" class="view hidden">
+            <h1>Volunteer Directory</h1>
+            <div class="toolbar">
+                <input type="text" id="vol-search" placeholder="Search name or code...">
+                <select id="vol-filter-org">
+                    <option value="ALL">All Orgs</option>
+                    <option value="CAPEC">CAPEC</option>
+                    <option value="ITECPEC">ITEC-PEC</option>
+                </select>
+                <button class="btn primary" onclick="openAddVolModal()">+ Add Volunteer</button>
+            </div>
+            <div class="table-container">
+                <table id="volunteers-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Org</th>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Leaderboard View -->
+        <div id="view-leaderboard" class="view hidden">
+            <h1>Contribution Leaderboard</h1>
+            <div class="table-container">
+                <table id="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Volunteer</th>
+                            <th>Total Hours</th>
+                            <th>Tasks</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Devices View -->
+        <div id="view-devices" class="view hidden">
+            <h1>Device Management</h1>
+            <div class="toolbar">
+                <button id="btn-add-device" class="btn primary">Register New Kiosk</button>
+            </div>
+            <div class="table-container">
+                <table id="devices-table">
+                    <thead>
+                        <tr>
+                            <th>Device Name</th>
+                            <th>Org</th>
+                            <th>Last Seen</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports View -->
+        <div id="view-reports" class="view hidden">
+            <h1>Reports & Exports</h1>
+            <div class="report-cards">
+                <div class="card">
+                    <h3>Daily Attendance</h3>
+                    <p>Export all attendance records for a specific day.</p>
+                    <input type="date" id="report-date">
+                    <button class="btn secondary" onclick="exportAttendance()">Export CSV</button>
+                </div>
+                <div class="card">
+                    <h3>Badges</h3>
+                    <p>Export badge data for printing.</p>
+                    <button class="btn secondary" onclick="exportBadges()">Export Badges CSV</button>
+                    <button class="btn primary" style="margin-top:10px;" onclick="printAllBadges()">Print All
+                        Badges</button>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:20px;">
+                <h3>Daily Activity Summary</h3>
+                <div class="table-container">
+                    <table id="daily-log-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Attendees</th>
+                                <th>Tasks</th>
+                                <th>Total Hours</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Daily Activity View -->
+        <div id="view-daily-activity" class="view hidden">
+            <div class="header-bar">
+                <h1>Daily Activity</h1>
+                <input type="date" id="activity-date"
+                    style="padding:8px; border-radius:6px; border:1px solid var(--card-border); background:var(--card-bg); color:var(--text-primary);">
+            </div>
+
+            <div id="activity-volunteers-grid"
+                style="display:grid; grid-template-columns:repeat(auto-fill, minmax(350px, 1fr)); gap:20px; margin-top:20px;">
+                <!-- Volunteer activity cards loaded here -->
+            </div>
+        </div>
+
+        <!-- Scan View -->
+        <div id="view-scan" class="view hidden">
+            <h1>Admin Scanner</h1>
+            <div class="card">
+                <p>Scan a volunteer badge to manually check them in/out.</p>
+                <div id="admin-qr-reader" style="margin-top:20px;"></div>
+                <p id="scan-result" style="margin-top:20px; font-weight:bold;"></p>
+                <button id="btn-admin-scan" class="btn primary">Start Camera</button>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <!-- Add Volunteer Modal -->
+        <div id="modal-add-vol" class="overlay hidden">
+            <div class="login-box" style="text-align:left;">
+                <h2>Add Volunteer</h2>
+                <form id="form-add-vol">
+                    <label>Name</label>
+                    <input type="text" id="new-vol-name" required>
+                    <label>Email</label>
+                    <input type="email" id="new-vol-email">
+                    <label>Phone</label>
+                    <input type="text" id="new-vol-phone">
+                    <label>Profile Image</label>
+                    <input type="file" id="new-vol-image" accept="image/*" style="margin-bottom:15px;">
+                    <button type="submit" class="btn primary">Create</button>
+                    <button type="button" class="btn secondary" onclick="closeModal('modal-add-vol')">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Volunteer Modal -->
+        <div id="modal-edit-vol" class="overlay hidden">
+            <div class="login-box" style="text-align:left;">
+                <h2>Edit Volunteer</h2>
+                <form id="form-edit-vol">
+                    <input type="hidden" id="edit-vol-id">
+                    <label>Name</label>
+                    <input type="text" id="edit-vol-name" required>
+                    <label>Email</label>
+                    <input type="email" id="edit-vol-email">
+                    <label>Phone</label>
+                    <input type="text" id="edit-vol-phone">
+                    <label>Profile Image</label>
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:15px;">
+                        <img id="edit-vol-image-preview" src=""
+                            style="width:50px; height:50px; border-radius:50%; object-fit:cover; display:none; border: 2px solid var(--primary);">
+                        <input type="file" id="edit-vol-image" accept="image/*" style="flex:1;">
+                    </div>
+                    <button type="submit" class="btn primary">Update</button>
+                    <button type="button" class="btn secondary" onclick="closeModal('modal-edit-vol')">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW QR Modal -->
+        <div id="modal-view-qr" class="overlay hidden">
+            <div class="login-box" style="text-align:center;">
+                <h2>Volunteer Badge</h2>
+                <div id="qr-display" style="margin: 20px auto;"></div>
+                <h3 id="qr-vol-name"></h3>
+                <p id="qr-vol-code" style="font-family:monospace; font-size:1.2rem;"></p>
+                <button type="button" class="btn secondary" onclick="closeModal('modal-view-qr')">Close</button>
+                <button type="button" class="btn primary" onclick="printBadge()">Print</button>
+            </div>
+        </div>
+
+        <!-- Volunteer Detail Modal -->
+        <div id="modal-vol-detail" class="overlay hidden">
+            <div class="login-box" style="max-width: 800px; width: 95%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <img id="det-vol-image" src=""
+                            style="width:60px; height:60px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary); display:none;">
+                        <div id="det-vol-avatar"
+                            style="width:60px; height:60px; border-radius:50%; background: #333; display:flex; align-items:center; justify-content:center; font-size:1.5rem; border: 2px solid var(--primary);">
+                            👤</div>
+                        <h2 id="det-vol-name">Volunteer Details</h2>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn primary small" id="btn-edit-det"
+                            onclick="openEditModalFromDetail()">Edit</button>
+                        <button class="btn secondary small" onclick="closeModal('modal-vol-detail')">✕</button>
+                    </div>
+                </div>
+
+                <div class="stats-row" style="margin-bottom:20px;">
+                    <div class="stat-card" style="padding:15px;">
+                        <h4 style="font-size:0.8rem; margin-bottom:5px;">Total Hours</h4>
+                        <div class="value" id="det-vol-hours" style="font-size:1.5rem;">0</div>
+                    </div>
+                    <div class="stat-card" style="padding:15px;">
+                        <h4 style="font-size:0.8rem; margin-bottom:5px;">Approved Tasks</h4>
+                        <div class="value" id="det-vol-tasks" style="font-size:1.5rem;">0</div>
+                    </div>
+                </div>
+
+                <div class="filter-bar" style="padding:5px; margin-bottom:15px;">
+                    <button class="btn small" style="background:var(--primary);" id="btn-show-att"
+                        onclick="switchDetailTab('attendance')">Attendance</button>
+                    <button class="btn small" id="btn-show-tasks" onclick="switchDetailTab('tasks')">Tasks</button>
+                </div>
+
+                <div id="det-attendance-view" class="table-container" style="max-height: 400px; overflow-y:auto;">
+                    <table class="simple-table" id="det-att-table">
+                        <thead>
+                            <tr>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="det-tasks-view" class="table-container hidden" style="max-height: 400px; overflow-y:auto;">
+                    <table class="simple-table" id="det-tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Task</th>
+                                <th>Mins</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="admin.js?v=2"></script>
+</body>
+
+</html>
