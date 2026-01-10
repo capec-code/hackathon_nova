@@ -318,6 +318,22 @@ function startTimer(startTime) {
 }
 
 function checkRestoreSession() {
+    // 1. Check URL for code (passed from landing page)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCode = urlParams.get('code');
+    
+    if (urlCode) {
+        console.log("Auto-login via URL code:", urlCode);
+        
+        // Clean up URL to keep it tidy
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+        
+        handleCheckIn(urlCode);
+        return;
+    }
+
+    // 2. Fallback to localStorage
     const savedCode = localStorage.getItem('volunteer_code');
     if (savedCode) {
         console.log("Restoring session for:", savedCode);
