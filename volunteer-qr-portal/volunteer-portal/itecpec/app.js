@@ -259,7 +259,7 @@ document.getElementById('btn-checkout').addEventListener('click', async () => {
         if (data.success) {
             showToast("Clocked Out. Goodbye!");
             localStorage.removeItem('volunteer_code'); // [PERSISTENCE]
-            setTimeout(() => location.reload(), 2000);
+            setTimeout(() => window.location.href = 'https://scan.hackathon-nova.com', 2000);
         } else {
             showToast(data.error || "Checkout failed");
         }
