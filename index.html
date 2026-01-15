@@ -1780,6 +1780,66 @@
     </div>
   </section>
 
+  <!-- Innovation by Our Founders Section -->
+  <section id="founders" class="py-20 bg-transparent text-white border-t border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl sm:text-5xl font-black mb-4 text-white">
+          Innovation by Our <span class="gradient-text">Founders</span>
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
+        <p class="text-gray-400 text-lg font-medium">
+          Initiatives by CAPEC & ITEC-PEC Leadership
+        </p>
+      </div>
+
+      <!-- Founder Cards Container -->
+      <div id="founders-list" class="flex flex-wrap justify-center gap-8 items-stretch">
+        <!-- Manual Placeholder data (will be replaced by JS if data exists, or kept as fallback/example) -->
+        <!-- Card 1 -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-10 shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 w-full max-w-[500px] flex flex-col items-center text-center group relative overflow-hidden backdrop-blur-sm">
+          <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-orange-500 to-green-600"></div>
+          
+          <!-- Logo Placeholder -->
+          <div class="h-24 w-full mb-8 flex items-center justify-center">
+            <div class="bg-white/10 text-gray-400 rounded-lg h-20 w-48 flex items-center justify-center border border-dashed border-white/20">
+               <span class="text-sm">Founder Startup Logo</span>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">Startup Name</h3>
+          <p class="text-gray-400 mb-8 leading-relaxed">
+            Revolutionizing the industry with cutting-edge technology and innovative solutions driven by passion.
+          </p>
+          
+          <a href="#" target="_blank" class="mt-auto inline-flex items-center text-orange-400 font-bold hover:text-orange-300 transition-colors group-hover:gap-2">
+            Visit Website <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-10 shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 w-full max-w-[500px] flex flex-col items-center text-center group relative overflow-hidden backdrop-blur-sm">
+          <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-orange-500 to-green-600"></div>
+          
+          <!-- Logo Placeholder -->
+          <div class="h-24 w-full mb-8 flex items-center justify-center">
+             <div class="bg-white/10 text-gray-400 rounded-lg h-20 w-48 flex items-center justify-center border border-dashed border-white/20">
+               <span class="text-sm">Founder Startup Logo</span>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">Another Venture</h3>
+          <p class="text-gray-400 mb-8 leading-relaxed">
+            Empowering communities through sustainable practices and forward-thinking digital transformation.
+          </p>
+          
+          <a href="#" target="_blank" class="mt-auto inline-flex items-center text-orange-400 font-bold hover:text-orange-300 transition-colors group-hover:gap-2">
+            Visit Website <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
 
 
   <section id="mentors" class="py-20">
@@ -2624,7 +2684,8 @@
             printing: [],
             strategic: [],
             community: [],
-            media: []
+            media: [],
+            founder: []
           };
 
           data.forEach(sponsor => {
@@ -2632,6 +2693,43 @@
               sponsorsByCategory[sponsor.category].push(sponsor);
             }
           });
+
+          // Render Founders function with specific design
+          const renderFounders = (founders) => {
+            const container = document.getElementById('founders-list');
+            if (!container) return;
+
+            if (founders.length > 0) {
+               container.innerHTML = founders.map(founder => {
+                 const href = founder.website_url || '#';
+                 const logo = founder.logo_url || '';
+                 const name = founder.name || 'Startup Name';
+                 
+                 return `
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-10 shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 w-full max-w-[500px] flex flex-col items-center text-center group relative overflow-hidden backdrop-blur-sm">
+          <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-orange-500 to-green-600"></div>
+          
+          <div class="h-24 w-full mb-8 flex items-center justify-center">
+             ${logo ? `<img src="${logo}" alt="${name}" class="h-full w-auto object-contain">` : 
+             `<div class="bg-white/10 text-gray-400 rounded-lg h-20 w-48 flex items-center justify-center border border-dashed border-white/20"><span class="text-sm">${name}</span></div>`}
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">${name}</h3>
+          
+          <p class="text-gray-400 mb-8 leading-relaxed">
+             ${founder.description || 'Revolutionizing the industry with cutting-edge technology and innovative solutions driven by passion.'}
+          </p>
+          
+          <a href="${href}" target="_blank" class="mt-auto inline-flex items-center text-orange-400 font-bold hover:text-orange-300 transition-colors group-hover:gap-2">
+            Visit Website <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+        </div>`;
+               }).join('\n');
+            }
+          };
+
+          // Render Founders
+          renderFounders(sponsorsByCategory.founder);
 
           // Render function
           const renderSponsors = (sponsors, containerId, cardClass) => {

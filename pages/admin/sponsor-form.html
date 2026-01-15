@@ -52,6 +52,14 @@
                         placeholder="e.g. Tech Company Inc.">
                 </div>
 
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                    <textarea id="description" rows="3" class="input-dark w-full rounded-lg px-4 py-3 transition"
+                        placeholder="Custom description for the sponsor/founder..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Optional. Overrides the default description text.</p>
+                </div>
+
                 <!-- Category & Display Order -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -65,6 +73,7 @@
                             <option value="internet" class="bg-white text-black">Internet Partner</option>
                             <option value="printing" class="bg-white text-black">Printing Partner</option>
                             <option value="strategic" class="bg-white text-black">Strategic Community Partner</option>
+                            <option value="founder" class="bg-white text-black">Founder's Initiative</option>
                             <option value="community" class="bg-white text-black">Community Partner</option>
                             <option value="media" class="bg-white text-black">Media Partner</option>
                         </select>
@@ -219,6 +228,7 @@
 
                 if (data) {
                     document.getElementById('name').value = data.name || '';
+                    document.getElementById('description').value = data.description || '';
                     document.getElementById('category').value = data.category || 'silver';
                     document.getElementById('display-order').value = data.display_order || 0;
                     document.getElementById('website-url').value = data.website_url || '';
@@ -301,6 +311,7 @@
             e.preventDefault();
 
             const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
             const category = document.getElementById('category').value;
             const displayOrder = parseInt(document.getElementById('display-order').value) || 0;
             const websiteUrl = document.getElementById('website-url').value.trim();
@@ -336,6 +347,7 @@
 
                 const payload = {
                     name,
+                    description,
                     category,
                     display_order: displayOrder,
                     is_active: isActive,

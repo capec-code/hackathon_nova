@@ -237,6 +237,16 @@
                 </a>
             </div>
 
+            <!-- Search and Filter -->
+            <div class="mb-4">
+                <div class="relative max-w-md">
+                    <input type="text" id="sponsor-search" 
+                        class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
+                        placeholder="Search sponsors by name...">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+
             <!-- Filter by Category -->
             <div class="mb-6 flex gap-3 flex-wrap">
                 <button onclick="filterSponsors('all')"
@@ -1027,8 +1037,15 @@
                     .order('display_order', { ascending: true })
                     .order('created_at', { ascending: false });
 
+                // Apply category filter
                 if (currentSponsorFilter !== 'all') {
                     query = query.eq('category', currentSponsorFilter);
+                }
+
+                // Apply search filter
+                const searchTerm = document.getElementById('sponsor-search').value.trim();
+                if (searchTerm) {
+                    query = query.ilike('name', `%${searchTerm}%`);
                 }
 
                 const { data, error } = await query;
@@ -1246,6 +1263,18 @@
 
         // Initialize
         checkSession().then(() => fetchAnnouncements());
+
+        // Sponsor Search Listener
+        const sponsorSearchInput = document.getElementById('sponsor-search');
+        if (sponsorSearchInput) {
+            let debounceTimer;
+            sponsorSearchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    fetchSponsors();
+                }, 300);
+            });
+        }
     </script>
 </body>
 
