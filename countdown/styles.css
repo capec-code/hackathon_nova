@@ -6,10 +6,15 @@
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
     
+    --brand-gold: #ffd700;    /* Victory Gold */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    
     --font-main: 'Inter', 'Share Tech Mono', monospace, sans-serif; 
+    --font-cyber: 'Hackd', sans-serif;
     
     --title-size-prep: 6vw;
-    --title-size-go: 12vw;
+    --title-size-go: 10vw;
 }
 
 /* ROCKET STYLES */
@@ -55,6 +60,16 @@ body, html {
 
 /* IMPORT MONO FONT */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* LOCAL FONT: HACKD */
+@font-face {
+    font-family: 'Hackd';
+    src: url('fonts/Hackd.woff2') format('woff2'),
+         url('fonts/Hackd.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 
 /* UTILS */
 .hidden { display: none !important; opacity: 0; }
@@ -102,6 +117,7 @@ body, html {
 #impact-word {
     font-size: 25vw;
     font-weight: 900;
+    font-family: var(--font-cyber);
     color: var(--brand-red);
     text-transform: uppercase;
 }
@@ -120,6 +136,7 @@ body, html {
 /* TITLES */
 #main-title {
     font-weight: 800;
+    font-family: var(--font-cyber);
     text-shadow: 0 0 30px rgba(0,0,0,0.5);
     line-height: 1;
     will-change: transform, opacity;
@@ -143,6 +160,7 @@ body, html {
 .animate-impact {
     animation: scaleOvershoot 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     color: var(--brand-white);
+    font-size: var(--title-size-go);
     text-shadow: 0 0 50px var(--brand-red), 0 0 20px rgba(234, 88, 12, 0.5);
 }
 
@@ -176,6 +194,7 @@ body, html {
     font-size: 1.5rem;
     font-weight: 600;
     backdrop-filter: blur(10px);
+    font-family: var(--font-cyber);
 }
 
 .motto-container {
@@ -183,6 +202,7 @@ body, html {
     font-size: 2rem;
     font-style: italic;
     color: #bbb;
+    font-family: var(--font-cyber);
 }
 
 /* FOOTER */
@@ -195,6 +215,7 @@ body, html {
     letter-spacing: 0.05em;
     border-top: 1px solid rgba(255,255,255,0.1);
     padding-top: 1rem;
+    font-family: var(--font-cyber);
 }
 
 /* ANIMATIONS */
@@ -303,6 +324,7 @@ kbd { background: #333; padding: 2px 5px; border-radius: 3px; }
 .time-card span {
     font-size: 5rem;
     font-weight: 700;
+    font-family: var(--font-cyber);
     color: var(--brand-red);
     text-shadow: 0 0 20px rgba(234, 88, 12, 0.3);
     line-height: 1;
