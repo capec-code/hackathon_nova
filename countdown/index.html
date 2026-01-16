@@ -19,9 +19,11 @@
             <ul>
                 <li><kbd>Space</kbd> Pause/Resume Animation</li>
                 <li><kbd>G</kbd> TRIGGER GO SEQUENCE</li>
-                <li><kbd>R</kbd> Reset to PREP</li>
+                <li><kbd>Space</kbd> Pause/Resume</li>
+                <li><kbd>R</kbd> Reset (1701)</li>
                 <li><kbd>F</kbd> Fullscreen</li>
                 <li><kbd>H</kbd> Toggle Help</li>
+                <li><kbd>Ctrl+Shift+P</kbd> Manual Resume</li>
             </ul>
             <div class="status-indicator">State: <span id="admin-status">PREP</span></div>
         </div>
@@ -37,22 +39,25 @@
 
 
 
-        <!-- CENTER DISPLAY -->
+        <!-- CENTER DISPLAY (FLEX STACK) -->
         <div class="center-content">
 
-            <!-- STATE: IMPACT FLASH (Abs Center overlay) -->
-            <div id="impact-flash" class="impact-layer hidden">
-                <div id="impact-word">NOW.</div>
+            <!-- 1. TOP SECTION: TITLES -->
+            <div id="title-box" class="layout-section">
+                <!-- STATE: IMPACT FLASH -->
+                <div id="impact-flash" class="impact-layer hidden">
+                    <div id="impact-word">NOW.</div>
+                </div>
+
+                <div id="title-container">
+                    <h1 id="main-title" class="title-prep">HACKATHON NOVA</h1>
+                    <div id="subtitle" class="subtitle-prep">OPENING CEREMONY</div>
+                    <div id="live-badge" class="live-badge hidden">🔴 LIVE</div>
+                </div>
             </div>
 
-            <!-- STATE: MAIN TITLES -->
-            <div id="title-container">
-                <h1 id="main-title" class="title-prep">HACKATHON NOVA</h1>
-                <div id="subtitle" class="subtitle-prep">OPENING CEREMONY</div>
-
-                <!-- LIVE INDICATOR -->
-                <div id="live-badge" class="live-badge hidden">🔴 LIVE</div>
-
+            <!-- 2. MIDDLE SECTION: TIMERS (PREP & LIVE) -->
+            <div id="timer-box" class="layout-section">
                 <!-- PREP STATE: COUNTDOWN (Glass Cards) -->
                 <div id="countdown" class="countdown-container">
                     <div class="time-unit">
@@ -61,18 +66,14 @@
                         </div>
                         <span class="time-label">HOURS</span>
                     </div>
-
                     <div class="time-separator">:</div>
-
                     <div class="time-unit">
                         <div class="time-card glass">
                             <span id="cd-m">00</span>
                         </div>
                         <span class="time-label">MINS</span>
                     </div>
-
                     <div class="time-separator">:</div>
-
                     <div class="time-unit">
                         <div class="time-card glass">
                             <span id="cd-s">00</span>
@@ -81,19 +82,29 @@
                     </div>
                 </div>
 
-                <!-- Manual Start Button (Visible in Demo/Prep) -->
-                <button id="btn-start-timer" class="btn-primary">START COUNTDOWN</button>
+                <!-- STATE: LIVE TIMER (60H) -->
+                <div id="live-timer-container" class="hidden">
+                    <div class="timer-label">TIME REMAINING</div>
+                    <div id="live-timer" class="live-timer-digits">60:00:00</div>
+                </div>
+
+                <!-- Manual Buttons -->
+                <div id="btn-container">
+                   <button id="btn-start-timer" class="btn-primary">START COUNTDOWN</button>
+                </div>
             </div>
 
-            <!-- STATE: SETTLE INFO (Hidden initially) -->
-            <div id="settle-info" class="hidden" aria-live="polite">
-                <div class="info-chips">
-                    <span class="chip">⏱ 60 Hours</span>
-                    <span class="chip">👥 Team Size: 3</span>
-                    <span class="chip">📍 Pokhara Engineering College</span>
-                </div>
-                <div id="motto-box" class="motto-container">
-                    <!-- Mottos injected by JS -->
+            <!-- 3. BOTTOM SECTION: INFO CHIPS -->
+            <div id="info-box" class="layout-section">
+                <div id="settle-info" class="hidden" aria-live="polite">
+                    <div class="info-chips">
+                        <span class="chip">⏱ 60 Hours</span>
+                        <span class="chip">👥 Team Size: 3</span>
+                        <span class="chip">📍 Pokhara Engineering College</span>
+                    </div>
+                    <div id="motto-box" class="motto-container">
+                        <!-- Mottos injected by JS -->
+                    </div>
                 </div>
             </div>
 
