@@ -369,7 +369,7 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
           <a href="/">
-            <img src="assets/logo.png" alt="Hackathon Nova Logo" class="w-10 h-10 rounded-lg"
+            <img src="assets/logo.png" alt="Hackathon Nova Logo" class="w-10 h-10 rounded-lg" loading="lazy"
               onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';" /></a>
           <div>
             <a href="/">
@@ -2218,7 +2218,7 @@
         <div>
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center">
-              <img src="/assets/logo.png" alt="" />
+              <img src="/assets/logo.png" alt="" loading="lazy" />
             </div>
             <div>
               <div class="text-white font-bold text-lg">
@@ -2662,7 +2662,7 @@
           <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-orange-500 to-green-600"></div>
           
           <div class="h-24 w-full mb-8 flex items-center justify-center">
-             ${logo ? `<img src="${logo}" alt="${name}" class="h-full w-auto object-contain">` : 
+              ${logo ? `<img src="${logo}" alt="${name}" class="h-full w-auto object-contain" loading="lazy">` : 
              `<div class="bg-white/10 text-gray-400 rounded-lg h-20 w-48 flex items-center justify-center border border-dashed border-white/20"><span class="text-sm">${name}</span></div>`}
           </div>
           
@@ -2704,7 +2704,7 @@
                   <div class="${cardClass}">
                     ${href ? `<a ${href} class="flex flex-col items-center justify-center h-full w-full text-decoration-none">` : `<div class="flex flex-col items-center justify-center h-full w-full">`}
                       ${logo ?
-                    `<img src="${logo}" alt="${sponsor.name || ''}" class="${shouldShowName ? 'w-full h-auto object-contain mb-3 max-h-[70%]' : 'w-full h-full object-contain'}" onerror="this.style.display='none'; if(!this.parentElement.querySelector('.sponsor-name')) { this.parentElement.parentElement.classList.add('hidden'); }" />` :
+                    `<img src="${logo}" alt="${sponsor.name || ''}" class="${shouldShowName ? 'w-full h-auto object-contain mb-3 max-h-[70%]' : 'w-full h-full object-contain'}" loading="lazy" onerror="this.style.display='none'; if(!this.parentElement.querySelector('.sponsor-name')) { this.parentElement.parentElement.classList.add('hidden'); }" />` :
                     `<div class="text-gray-500 text-sm text-center ${shouldShowName ? 'mb-3' : ''}">${sponsor.name || 'No Logo'}</div>`
                   }
                       ${shouldShowName ? `<div class="sponsor-name text-white text-xs md:text-sm font-semibold text-center px-2 break-words">${sponsor.name}</div>` : ''}
@@ -2812,7 +2812,7 @@
             <!-- Image Container -->
             <div id="modal-image-container" class="mb-6 hidden">
               <img id="modal-image" src="" alt="Announcement Attachment"
-                class="w-full h-auto rounded-xl border border-gray-700">
+                class="w-full h-auto rounded-xl border border-gray-700" loading="lazy">
             </div>
 
             <!-- PDF Container -->
