@@ -234,7 +234,7 @@ body, html {
     text-align: center;
     opacity: 1;
     font-size: 1rem;
-    padding: 2vh 3vw;
+    padding: 1.5vh 3vw;
     letter-spacing: 0.1em;
     border-top: 1px solid rgba(255,255,255,0.2);
     background: rgba(0,0,0,0.8);
@@ -244,6 +244,32 @@ body, html {
     bottom: 0;
     left: 0;
     z-index: 1000;
+}
+
+.github-branding {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+    opacity: 0.8;
+}
+
+.github-logo-footer {
+    width: 18px;
+    height: 18px;
+    filter: brightness(100) invert(1);
+}
+
+.github-text {
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+.github-text a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
 }
 
 /* ANIMATIONS */
