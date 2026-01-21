@@ -2907,11 +2907,16 @@
     </div>
   </div>
   <!-- Registration Status Modal -->
-  <div id="reg-status-modal" class="fixed inset-0 z-[60] hidden">
+  <div id="reg-status-modal" class="fixed inset-0 z-[60] hidden" onclick="if(event.target === this) closeRegModal()">
     <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
     <div class="flex items-center justify-center min-h-screen p-4">
       <div
         class="relative bg-gray-900 border border-gray-800 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl glow-effect">
+        <!-- Close Button -->
+        <button onclick="closeRegModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition z-10">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+
         <div class="p-8 text-center">
           <!-- Logo -->
           <div class="mb-6">
