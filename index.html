@@ -990,13 +990,13 @@
             <div class="flex-1 md:w-1/2 md:pr-12 md:text-right relative z-10">
               <div
                 class="bg-gradient-to-br from-cyan-500/10 to-transparent border border-gray-800 rounded-xl p-4 md:p-6">
-                <h3 class="text-lg md:text-2xl font-bold text-green-500 mb-2">
+                <h3 id="timeline-reg-title" class="text-lg md:text-2xl font-bold text-green-500 mb-2">
                   Registration Is Open now
                 </h3>
-                <p class="text-green-400 font-semibold mb-2 text-sm md:text-base">
+                <p id="timeline-reg-status" class="text-green-400 font-semibold mb-2 text-sm md:text-base">
                   Registration is open till 23 January 
                 </p>
-                <p class="text-gray-400 text-sm md:text-base">
+                <p id="timeline-reg-desc" class="text-gray-400 text-sm md:text-base">
                   Registration your team now !!! 
                 </p>
            
@@ -2906,6 +2906,121 @@
       </div>
     </div>
   </div>
+  <!-- Registration Status Modal -->
+  <div id="reg-status-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="relative bg-gray-900 border border-gray-800 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl glow-effect">
+        <div class="p-8 text-center">
+          <!-- Logo -->
+          <div class="mb-6">
+            <img src="assets/logo.png" alt="Hackathon Nova Logo"
+              class="w-20 h-20 mx-auto rounded-xl shadow-lg border border-white/10">
+          </div>
+
+          <h2 id="reg-modal-title" class="text-3xl font-bold text-white mb-2">Registration Status</h2>
+
+          <!-- Timer Container -->
+          <div id="reg-timer-container" class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10 hidden">
+            <p id="reg-timer-label" class="text-xs uppercase tracking-widest text-gray-400 mb-2">Time Remaining</p>
+            <div id="reg-countdown" class="text-2xl font-mono font-bold text-orange-500">
+              00d 00h 00m 00s
+            </div>
+          </div>
+
+          <p id="reg-modal-text" class="text-gray-300 text-lg mb-8"></p>
+
+          <button onclick="closeRegModal()"
+            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all">
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let countdownInterval;
+
+    function closeRegModal() {
+      const modal = document.getElementById('reg-status-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      if (countdownInterval) clearInterval(countdownInterval);
+    }
+
+    function startCountdown(deadline) {
+      const timerContainer = document.getElementById('reg-timer-container');
+      const countdownElement = document.getElementById('reg-countdown');
+
+      timerContainer.classList.remove('hidden');
+
+      function update() {
+        const now = new Date().getTime();
+        const distance = deadline - now;
+
+        if (distance < 0) {
+          clearInterval(countdownInterval);
+          location.reload(); // Refresh to show "Closed" state
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownElement.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      update();
+      countdownInterval = setInterval(update, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Deadline: Jan 24, 00:00:00 (which means Jan 23 is the last full day)
+      const deadline = new Date('2026-01-24T00:00:00+05:45').getTime();
+      const now = new Date().getTime();
+      const isClosed = now >= deadline;
+
+      const modal = document.getElementById('reg-status-modal');
+      const modalTitle = document.getElementById('reg-modal-title');
+      const modalText = document.getElementById('reg-modal-text');
+
+      const timelineTitle = document.getElementById('timeline-reg-title');
+      const timelineStatus = document.getElementById('timeline-reg-status');
+      const timelineDesc = document.getElementById('timeline-reg-desc');
+
+      if (isClosed) {
+        // Update Modal
+        modalTitle.innerText = "Registration Closed";
+        modalText.innerText = "We're sorry, but registration for Hackathon Nova 2026 is now closed. Stay tuned for future events!";
+
+        // Update Timeline
+        if (timelineTitle) {
+          timelineTitle.innerText = "Registration Closed";
+          timelineTitle.classList.replace('text-green-500', 'text-red-500');
+        }
+        if (timelineStatus) {
+          timelineStatus.innerText = "Registration is closed";
+          timelineStatus.classList.replace('text-green-400', 'text-red-400');
+        }
+        if (timelineDesc) {
+          timelineDesc.innerText = "Follow us for more updates!";
+        }
+      } else {
+        // Update Modal
+        modalTitle.innerText = "Registration is Open!";
+        modalText.innerText = "Join Hackathon Nova 2026! Be quick, registration closes soon.";
+        startCountdown(deadline);
+      }
+
+      // Show modal on load
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    });
+  </script>
 </body>
 
 </html>
