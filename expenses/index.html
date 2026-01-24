@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker | Hackathon Nova 2026</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: #0e172b;
+      color: #f8fafc;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 1.5rem;
+    }
+
+    .status-pending { @apply bg-orange-500/10 text-orange-400 border-orange-500/20; }
+    .status-approved { @apply bg-green-500/10 text-green-400 border-green-500/20; }
+    .status-rejected { @apply bg-red-500/10 text-red-400 border-red-500/20; }
+
+    .hidden-state { display: none !important; }
+    
+    /* Fix Input Colors */
+    .input-field {
+        @apply w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all placeholder-gray-500;
+        color-scheme: dark;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-black/80 backdrop-blur-lg border-b border-gray-800 z-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3 text-orange-500">
+          <a href="/">
+            <img src="/assets/logo.png" alt="Logo" class="w-10 h-10 rounded-lg" />
+          </a>
+          <span class="font-bold text-lg truncate max-w-[120px] sm:max-w-none">Expenses</span>
+        </div>
+        <div id="user-badge" class="hidden flex items-center bg-orange-500/10 px-3 py-1.5 rounded-full border border-orange-500/20">
+          <span id="display-code" class="text-orange-500 font-bold text-[10px] sm:text-xs">CODE: ****</span>
+          <button onclick="logout()" class="ml-2 text-gray-400 hover:text-white transition">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+        <div class="flex space-x-4 items-center text-xs font-medium">
+             <a href="../goods/" class="text-gray-400 hover:text-white hidden sm:block">Goods</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Login Overlay -->
+  <div id="login-screen" class="flex-1 flex items-center justify-center p-4 pt-20">
+    <div class="glass-card max-w-md w-full p-8 sm:p-10 text-center shadow-2xl relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-red-500"></div>
+      <div class="mb-8">
+        <div class="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-orange-500/30">
+          <i class="fas fa-key text-2xl text-orange-500"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">Secure Access</h2>
+        <p class="text-gray-400 text-sm">Enter your validator secret code to continue.</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <input type="password" id="secret_code" placeholder="Enter Secret Code" 
+          class="w-full bg-black/40 border-2 border-gray-800 rounded-xl px-6 py-4 text-center text-2xl tracking-[0.5em] focus:border-orange-500 outline-none transition-all placeholder:tracking-normal placeholder:text-base" />
+        <button type="submit" id="login-btn"
+          class="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-orange-500/20">
+          Unlock Portal
+        </button>
+      </form>
+      <p id="login-error" class="text-red-500 text-xs mt-4 hidden"></p>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <main id="main-dashboard" class="flex-1 pt-24 pb-12 px-4 max-w-7xl mx-auto w-full hidden-state">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Submission Form -->
+      <div class="lg:col-span-4 order-2 lg:order-1">
+        <div class="glass-card p-6 sm:p-8">
+          <h3 class="text-xl font-bold mb-6 flex items-center">
+            <i class="fas fa-receipt text-orange-500 mr-2"></i> Submit Expense
+          </h3>
+          <form id="expense-form" class="space-y-5">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Title / Purpose</label>
+              <input type="text" id="exp_title" required placeholder="e.g. Snacks for Mentors" class="input-field" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Amount (Rs)</label>
+                <input type="number" id="exp_amount" step="0.01" required placeholder="0.00" class="input-field" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Category</label>
+                <select id="exp_category" class="input-field">
+                  <option value="Food">Food</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Supplies">Supplies</option>
+                  <option value="Printing">Printing</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Description</label>
+              <textarea id="exp_desc" rows="3" placeholder="Brief details about this expense..." class="input-field resize-none"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Upload Proof (Bill/Receipt)</label>
+              <div class="relative group">
+                <input type="file" id="exp_proof" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                <div id="file-placeholder" class="bg-gray-900/50 border-2 border-dashed border-gray-700 rounded-xl p-4 text-center group-hover:border-orange-500/50 transition-all">
+                  <i class="fas fa-cloud-upload-alt text-2xl text-gray-500 mb-2"></i>
+                  <p class="text-xs text-gray-400">Click to upload image</p>
+                </div>
+                <div id="file-selected" class="hidden bg-orange-500/10 border border-orange-500/30 rounded-xl p-4 flex items-center justify-between">
+                  <span class="text-xs text-orange-500 truncate" id="file-name">file.jpg</span>
+                  <button type="button" onclick="resetFile()" class="text-orange-500 hover:text-white transition"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" id="exp_paid_college" class="w-4 h-4 rounded border-gray-600 text-orange-600 focus:ring-orange-500 bg-gray-900" />
+              <label for="exp_paid_college" class="text-xs font-bold text-gray-500 uppercase tracking-widest cursor-pointer select-none">Paid by College Directly</label>
+            </div>
+            <button type="submit" id="exp-submit-btn"
+              class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-4 rounded-xl mt-4 transition-all hover:shadow-lg hover:shadow-orange-500/20">
+              Submit Claim
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- User Dashboard List -->
+      <div class="lg:col-span-8 space-y-6 order-1 lg:order-2">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="glass-card p-5 border-l-4 border-orange-500">
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">My Claims</p>
+            <h2 id="my-total-amt" class="text-lg sm:text-2xl font-bold mt-1 tracking-tight">Rs. 0</h2>
+          </div>
+          <div class="glass-card p-5 border-l-4 border-green-500">
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Approved</p>
+            <h2 id="my-approved-amt" class="text-lg sm:text-2xl font-bold mt-1 tracking-tight">Rs. 0</h2>
+          </div>
+          <div class="glass-card p-5 border-l-4 border-gray-500 col-span-2 lg:col-span-1">
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Pending Items</p>
+            <h2 id="my-pending-count" class="text-lg sm:text-2xl font-bold mt-1 tracking-tight">0</h2>
+          </div>
+        </div>
+
+        <div class="glass-card overflow-hidden">
+          <div class="p-5 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="text-xl font-bold">My Submissions</h3>
+            <div class="flex space-x-2">
+              <button onclick="exportMyExpenses()" class="text-gray-400 hover:text-white transition p-2 bg-gray-800 rounded-lg text-xs font-bold">
+                  <i class="fas fa-file-export mr-1"></i> Export
+              </button>
+              <button onclick="fetchExpenses()" class="text-gray-400 hover:text-white transition p-2 bg-gray-800 rounded-lg">
+                  <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Desktop Table -->
+          <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-black/20 text-gray-500 text-[10px] uppercase font-bold">
+                <tr>
+                  <th class="px-6 py-4">Title & Date</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Amount</th>
+                  <th class="px-6 py-4 text-center">Proof</th>
+                </tr>
+              </thead>
+              <tbody id="expense-table-body" class="divide-y divide-gray-800/50">
+                <!-- Rows injected here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div id="expense-mobile-list" class="sm:hidden divide-y divide-gray-800/50 text-sm">
+            <!-- Mobile cards here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Proof Preview Modal -->
+  <div id="proof-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeProofModal()"></div>
+    <div class="relative max-w-4xl w-full">
+      <img id="proof-img" src="" class="w-full rounded-2xl shadow-2xl" />
+      <button onclick="closeProofModal()" class="absolute -top-12 right-0 text-white text-3xl hover:text-orange-500 transition">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <footer class="mt-auto border-t border-gray-800 py-8 text-center bg-black/40">
+    <p class="text-gray-500 text-[10px] uppercase tracking-widest px-4">© 2026 CAPEC - Hackathon Nova | Secure Expense Portal</p>
+  </footer>
+
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

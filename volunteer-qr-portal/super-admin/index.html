@@ -32,6 +32,10 @@
             <li><a href="#" class="nav-item" data-view="logs">📜 System Logs</a></li>
             <li><a href="#" class="nav-item" data-view="users">👥 All Volunteers</a></li>
             <li><a href="#" class="nav-item" data-view="leaderboard">🏆 Global Leaderboard</a></li>
+            <li style="margin-top:20px; padding:10px 16px; font-size:0.7rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; border-top:1px solid var(--card-border);">Finance & Goods</li>
+            <li><a href="#" class="nav-item" data-view="codes">🔑 Secret Codes</a></li>
+            <li><a href="#" class="nav-item" data-view="goods">📦 Hackathon Goods</a></li>
+            <li><a href="#" class="nav-item" data-view="expenses">💸 Expense Claims</a></li>
         </ul>
         <div class="user-profile">
             <div class="user-avatar" id="user-initials">S</div>
@@ -49,6 +53,9 @@
                 <button class="menu-toggle" id="menu-toggle">☰</button>
                 <h1 id="page-title">System Overview</h1>
             </div>
+            <button onclick="exportFinanceReport()" class="btn secondary small" style="border:1px solid var(--accent-color); color:var(--accent-color);">
+                📥 Master Report
+            </button>
         </div>
 
         <!-- Dashboard View -->
@@ -150,6 +157,76 @@
                         <tbody></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- Secret Codes View -->
+        <div id="view-codes" class="view hidden">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2>Validator Secret Codes</h2>
+                    <button class="btn primary small" onclick="generateNewCode()" style="width:auto;">+ Generate Code</button>
+                </div>
+                <div class="table-container hidden sm:block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Assigned To</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="codes-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="codes-mobile-list" class="sm:hidden"></div>
+            </div>
+        </div>
+
+        <!-- Hackathon Goods View -->
+        <div id="view-goods" class="view hidden">
+            <div class="card">
+                <h2>Inventory Management</h2>
+                <div class="table-container hidden sm:block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Est. Cost</th>
+                                <th style="text-align:right;">Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="goods-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="goods-mobile-list" class="sm:hidden"></div>
+            </div>
+        </div>
+
+        <!-- Expense Claims View -->
+        <div id="view-expenses" class="view hidden">
+            <div class="card">
+                <h2>Expense Verification</h2>
+                <div class="table-container hidden sm:block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Claim</th>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Amount</th>
+                                <th>Receipt</th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="expenses-mobile-list" class="sm:hidden"></div>
             </div>
         </div>
 
