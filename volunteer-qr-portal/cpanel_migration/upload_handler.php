@@ -82,6 +82,48 @@ if ($action === 'upload') {
         echo json_encode(["success" => false, "error" => $conn->error]);
     }
     $stmt->close();
+} elseif ($action === 'update_day') {
+    $ids = $_POST['ids'] ?? []; // Array of IDs
+    $new_day = (int)($_POST['day'] ?? 1);
+
+    if (empty($ids)) {
+        die(json_encode(["success" => false, "error" => "No items selected"]));
+    }
+
+    $id_list = implode(',', array_map('intval', $ids));
+    $sql = "UPDATE gallery_items SET day = $new_day WHERE id IN ($id_list)";
+    
+    if ($conn->query($sql)) {
+        echo json_encode(["success" => true, "updated_count" => $conn->affected_rows]);
+    } else {
+        echo json_encode(["success" => false, "error" => $conn->error]);
+    }
+} elseif ($action === 'delete_bulk') {
+    $ids = $_POST['ids'] ?? [];
+
+    if (empty($ids)) {
+        die(json_encode(["success" => false, "error" => "No items selected"]));
+    }
+
+    $id_list = implode(',', array_map('intval', $ids));
+    
+    // 1. Get files to delete from disk
+    $sql = "SELECT src FROM gallery_items WHERE id IN ($id_list)";
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $file_path = "../../" . ltrim($row['src'], '/');
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+    }
+
+    // 2. Delete from DB
+    $sql = "DELETE FROM gallery_items WHERE id IN ($id_list)";
+    if ($conn->query($sql)) {
+        echo json_encode(["success" => true, "deleted_count" => $conn->affected_rows]);
+    } else {
+        echo json_encode(["success" => false, "error" => $conn->error]);
+    }
 }
 
 $conn->close();

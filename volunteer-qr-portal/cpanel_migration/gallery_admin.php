@@ -59,10 +59,37 @@
         </div>
 
         <!-- Manage Section -->
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-xl">
-            <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
-                <span>🖼️</span> Manage Gallery
-            </h2>
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-xl relative">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold flex items-center gap-2">
+                    <span>🖼️</span> Manage Gallery
+                </h2>
+                <div class="flex items-center gap-2 text-sm text-gray-400">
+                    <input type="checkbox" id="select-all" class="w-4 h-4 accent-orange-500 cursor-pointer" onchange="toggleSelectAll(this)">
+                    <label for="select-all" class="cursor-pointer">Select All</label>
+                </div>
+            </div>
+
+            <!-- Bulk Action Bar -->
+            <div id="bulk-actions" class="hidden bg-gray-900 border border-orange-500/50 rounded-lg p-3 mb-6 flex flex-wrap items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+                <div class="text-sm font-medium text-orange-400">
+                    <span id="selected-count">0</span> items selected
+                </div>
+                <div class="flex items-center gap-2">
+                    <select id="bulk-day" class="bg-gray-800 border border-gray-700 rounded p-1.5 text-sm outline-none focus:border-orange-500">
+                        <option value="1">Move to Day 1</option>
+                        <option value="2">Move to Day 2</option>
+                    </select>
+                    <button onclick="applyBulkDay()" class="bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold px-3 py-1.5 rounded transition">
+                        Apply
+                    </button>
+                    <div class="w-px h-6 bg-gray-700 mx-1"></div>
+                    <button onclick="applyBulkDelete()" class="text-red-500 hover:bg-red-500/10 text-sm font-bold px-3 py-1.5 rounded transition">
+                        Delete Selected
+                    </button>
+                </div>
+            </div>
+
             <div id="items-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
                 <!-- Items list dynamic -->
                 <p class="text-gray-500 text-center py-8">Loading items...</p>
@@ -111,6 +138,71 @@
             }
         };
 
+        function toggleSelectAll(checkbox) {
+            const checks = document.querySelectorAll('.item-checkbox');
+            checks.forEach(c => c.checked = checkbox.checked);
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('.item-checkbox:checked').length;
+            const bar = document.getElementById('bulk-actions');
+            const countEl = document.getElementById('selected-count');
+            
+            countEl.innerText = count;
+            if (count > 0) bar.classList.remove('hidden');
+            else bar.classList.add('hidden');
+
+            // Update Select All state
+            const total = document.querySelectorAll('.item-checkbox').length;
+            document.getElementById('select-all').checked = (count === total && total > 0);
+        }
+
+        async function applyBulkDay() {
+            const selected = Array.from(document.querySelectorAll('.item-checkbox:checked')).map(c => c.value);
+            const day = document.getElementById('bulk-day').value;
+            
+            if (!confirm(`Are you sure you want to move ${selected.length} items to Day ${day}?`)) return;
+
+            const formData = new FormData();
+            formData.append('action', 'update_day');
+            formData.append('api_key', API_KEY);
+            formData.append('day', day);
+            selected.forEach(id => formData.append('ids[]', id));
+
+            try {
+                const res = await fetch('upload_handler.php', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    loadItems();
+                    document.getElementById('select-all').checked = false;
+                } else {
+                    alert("Bulk update failed: " + data.error);
+                }
+            } catch (err) { alert("Bulk update error"); }
+        }
+
+        async function applyBulkDelete() {
+            const selected = Array.from(document.querySelectorAll('.item-checkbox:checked')).map(c => c.value);
+            if (!confirm(`CRITICAL: Are you sure you want to PERMANENTLY DELETE ${selected.length} items? This cannot be undone.`)) return;
+
+            const formData = new FormData();
+            formData.append('action', 'delete_bulk');
+            formData.append('api_key', API_KEY);
+            selected.forEach(id => formData.append('ids[]', id));
+
+            try {
+                const res = await fetch('upload_handler.php', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    loadItems();
+                    document.getElementById('select-all').checked = false;
+                } else {
+                    alert("Bulk delete failed: " + data.error);
+                }
+            } catch (err) { alert("Bulk delete error"); }
+        }
+
         async function loadItems() {
             const list = document.getElementById('items-list');
             try {
@@ -120,8 +212,9 @@
                 list.innerHTML = items.reverse().map(item => {
                     const fullSrc = item.src.startsWith('http') ? item.src : MAIN_SITE_URL + item.src;
                     return `
-                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg border border-gray-700">
+                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg border border-gray-700 hover:border-orange-500/30 transition shadow-sm group">
                         <div class="flex items-center gap-3 overflow-hidden">
+                            <input type="checkbox" class="item-checkbox w-4 h-4 accent-orange-500 cursor-pointer" value="${item.id}" onchange="updateSelectedCount()">
                             <div class="w-12 h-12 rounded bg-gray-800 flex-shrink-0">
                                 ${item.type === 'image' ? `<img src="${fullSrc}" class="w-full h-full object-cover rounded">` : '<div class="w-full h-full flex items-center justify-center">📹</div>'}
                             </div>
@@ -130,10 +223,11 @@
                                 <p class="text-xs text-gray-500">Day ${item.day} • ${item.span}</p>
                             </div>
                         </div>
-                        <button onclick="deleteItem(${item.id})" class="text-red-500 hover:bg-red-500/10 p-2 rounded transition">🗑️</button>
+                        <button onclick="deleteItem(${item.id})" class="text-red-500 opacity-0 group-hover:opacity-100 hover:bg-red-500/10 p-2 rounded transition">🗑️</button>
                     </div>
                 `;}).join('');
                 
+                updateSelectedCount(); // Refresh selection state
                 if(items.length === 0) list.innerHTML = '<p class="text-gray-500 text-center py-8">No items in gallery.</p>';
             } catch (err) {
                 list.innerHTML = '<p class="text-red-400 text-center py-8">Failed to load items.</p>';
