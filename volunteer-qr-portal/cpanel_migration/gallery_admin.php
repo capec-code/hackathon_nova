@@ -60,13 +60,20 @@
 
         <!-- Manage Section -->
         <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-xl relative">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                 <h2 class="text-xl font-semibold flex items-center gap-2">
                     <span>🖼️</span> Manage Gallery
                 </h2>
-                <div class="flex items-center gap-2 text-sm text-gray-400">
-                    <input type="checkbox" id="select-all" class="w-4 h-4 accent-orange-500 cursor-pointer" onchange="toggleSelectAll(this)">
-                    <label for="select-all" class="cursor-pointer">Select All</label>
+                <div class="flex items-center gap-4">
+                    <div class="relative flex-1 md:w-64">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">🔍</span>
+                        <input type="text" id="admin-search" placeholder="Search items..." 
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-8 pr-3 py-2 text-sm outline-none focus:border-orange-500 transition-all">
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-gray-400">
+                        <input type="checkbox" id="select-all" class="w-4 h-4 accent-orange-500 cursor-pointer" onchange="toggleSelectAll(this)">
+                        <label for="select-all" class="cursor-pointer">Select All</label>
+                    </div>
                 </div>
             </div>
 
@@ -203,36 +210,55 @@
             } catch (err) { alert("Bulk delete error"); }
         }
 
+        let allGalleryItems = [];
+
         async function loadItems() {
-            const list = document.getElementById('items-list');
             try {
                 const res = await fetch('get_gallery.php');
-                const items = await res.json();
-                
-                list.innerHTML = items.reverse().map(item => {
-                    const fullSrc = item.src.startsWith('http') ? item.src : MAIN_SITE_URL + item.src;
-                    return `
-                    <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg border border-gray-700 hover:border-orange-500/30 transition shadow-sm group">
-                        <div class="flex items-center gap-3 overflow-hidden">
-                            <input type="checkbox" class="item-checkbox w-4 h-4 accent-orange-500 cursor-pointer" value="${item.id}" onchange="updateSelectedCount()">
-                            <div class="w-12 h-12 rounded bg-gray-800 flex-shrink-0">
-                                ${item.type === 'image' ? `<img src="${fullSrc}" class="w-full h-full object-cover rounded">` : '<div class="w-full h-full flex items-center justify-center">📹</div>'}
-                            </div>
-                            <div class="truncate">
-                                <p class="text-sm font-medium truncate">${item.src.split('/').pop()}</p>
-                                <p class="text-xs text-gray-500">Day ${item.day} • ${item.span}</p>
-                            </div>
-                        </div>
-                        <button onclick="deleteItem(${item.id})" class="text-red-500 opacity-0 group-hover:opacity-100 hover:bg-red-500/10 p-2 rounded transition">🗑️</button>
-                    </div>
-                `;}).join('');
-                
-                updateSelectedCount(); // Refresh selection state
-                if(items.length === 0) list.innerHTML = '<p class="text-gray-500 text-center py-8">No items in gallery.</p>';
+                allGalleryItems = await res.json();
+                renderItems(allGalleryItems);
             } catch (err) {
-                list.innerHTML = '<p class="text-red-400 text-center py-8">Failed to load items.</p>';
+                document.getElementById('items-list').innerHTML = '<p class="text-red-400 text-center py-8">Failed to load items.</p>';
             }
         }
+
+        function renderItems(items) {
+            const list = document.getElementById('items-list');
+            
+            if(items.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 text-center py-8">No matching items found.</p>';
+                updateSelectedCount();
+                return;
+            }
+
+            list.innerHTML = [...items].reverse().map(item => {
+                const fullSrc = item.src.startsWith('http') ? item.src : MAIN_SITE_URL + item.src;
+                return `
+                <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg border border-gray-700 hover:border-orange-500/30 transition shadow-sm group">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <input type="checkbox" class="item-checkbox w-4 h-4 accent-orange-500 cursor-pointer" value="${item.id}" onchange="updateSelectedCount()">
+                        <div class="w-12 h-12 rounded bg-gray-800 flex-shrink-0">
+                            ${item.type === 'image' ? `<img src="${fullSrc}" class="w-full h-full object-cover rounded">` : '<div class="w-full h-full flex items-center justify-center">📹</div>'}
+                        </div>
+                        <div class="truncate">
+                            <p class="text-sm font-medium truncate">${item.src.split('/').pop()}</p>
+                            <p class="text-xs text-gray-500">Day ${item.day} • ${item.span}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteItem(${item.id})" class="text-red-500 opacity-0 group-hover:opacity-100 hover:bg-red-500/10 p-2 rounded transition">🗑️</button>
+                </div>
+            `;}).join('');
+            
+            updateSelectedCount(); 
+        }
+
+        document.getElementById('admin-search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const filtered = allGalleryItems.filter(item => 
+                item.src.toLowerCase().includes(query)
+            );
+            renderItems(filtered);
+        });
 
         async function deleteItem(id) {
             if(!confirm('Are you sure you want to delete this item?')) return;
