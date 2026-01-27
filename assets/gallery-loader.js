@@ -100,10 +100,23 @@
     
     div.appendChild(contentWrapper);
 
-    // Watermark
+    // Watermark (Centered with Lines)
     const watermark = document.createElement('div');
-    watermark.className = 'absolute bottom-2 right-2 font-mono text-orange-500 font-bold text-[10px] sm:text-xs tracking-wider z-10 pointer-events-none bg-black/80 px-2 py-0.5 rounded border border-orange-500/30 shadow-[0_0_10px_rgba(255,107,53,0.3)]';
-    watermark.innerHTML = '&lt; Nova /&gt;'; // Shorter for grid
+    watermark.className = 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 z-10 pointer-events-none w-[80%]';
+    
+    const lineLeft = document.createElement('div');
+    lineLeft.className = 'h-[1px] flex-1 bg-gradient-to-r from-transparent to-orange-500/50';
+    
+    const textNode = document.createElement('span');
+    textNode.className = 'font-mono text-orange-500 font-bold text-[10px] sm:text-xs tracking-wider bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded border border-orange-500/20 shadow-[0_0_10px_rgba(255,107,53,0.2)] whitespace-nowrap';
+    textNode.innerHTML = '&lt; Nova /&gt;';
+    
+    const lineRight = document.createElement('div');
+    lineRight.className = 'h-[1px] flex-1 bg-gradient-to-l from-transparent to-orange-500/50';
+
+    watermark.appendChild(lineLeft);
+    watermark.appendChild(textNode);
+    watermark.appendChild(lineRight);
     
     div.classList.add('relative');
     div.appendChild(watermark);
@@ -183,12 +196,25 @@
         mediaContainer.appendChild(iframe);
     }
 
-    // -- Lightbox Watermark --
-    // Only for image/video types where we want the overlay
+    // -- Lightbox Watermark (Centered with Lines) --
     if(item.type !== 'youtube'){ 
         const lbWatermark = document.createElement('div');
-        lbWatermark.className = 'absolute bottom-4 right-4 font-mono text-orange-500 font-bold text-sm sm:text-lg tracking-wider z-20 pointer-events-none bg-black/80 px-4 py-2 rounded-lg border border-orange-500/30 shadow-[0_0_15px_rgba(255,107,53,0.4)]';
-        lbWatermark.innerHTML = '&lt; Hackathon Nova 2026 /&gt;';
+        lbWatermark.className = 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4 z-20 pointer-events-none w-[70%]';
+        
+        const lbLineLeft = document.createElement('div');
+        lbLineLeft.className = 'h-[2px] flex-1 bg-gradient-to-r from-transparent via-orange-500/40 to-orange-500/60';
+        
+        const lbTextNode = document.createElement('span');
+        lbTextNode.className = 'font-mono text-orange-500 font-bold text-base sm:text-xl tracking-widest bg-black/60 backdrop-blur-md px-6 py-3 rounded-xl border border-orange-500/30 shadow-[0_0_20px_rgba(255,107,53,0.3)] whitespace-nowrap';
+        lbTextNode.innerHTML = '&lt; Hackathon Nova 2026 /&gt;';
+        
+        const lbLineRight = document.createElement('div');
+        lbLineRight.className = 'h-[2px] flex-1 bg-gradient-to-l from-transparent via-orange-500/40 to-orange-500/60';
+
+        lbWatermark.appendChild(lbLineLeft);
+        lbWatermark.appendChild(lbTextNode);
+        lbWatermark.appendChild(lbLineRight);
+        
         mediaContainer.appendChild(lbWatermark);
     }
 
@@ -228,46 +254,48 @@
             // Draw original image
             ctx.drawImage(img, 0, 0);
 
-            // -- Draw Funky Watermark --
-            // Responsive sizing: ~2% of image width (Reduced from 4%)
-            const fontSize = Math.max(16, Math.floor(img.width * 0.02)); 
-            const padding = Math.floor(img.width * 0.02);
-
-            // Background Box
+            // -- Draw Funky Centered Watermark with Lines --
+            // Responsive sizing: ~3% of image width
+            const fontSize = Math.max(24, Math.floor(img.width * 0.03)); 
             const text = '< Hackathon Nova 2026 />';
             ctx.font = `bold ${fontSize}px "Courier New", monospace`;
             const textMetrics = ctx.measureText(text);
             const textWidth = textMetrics.width;
-            const boxHeight = fontSize * 1.5; // Tighter box
-            const boxPadding = fontSize * 0.4;
             
-            const x = img.width - padding - textWidth - (boxPadding * 2);
-            const y = img.height - padding - boxHeight;
+            const centerX = img.width / 2;
+            const centerY = img.height / 2;
+            const boxHeight = fontSize * 1.8;
+            const boxPadding = fontSize * 0.8;
+            const totalBoxWidth = textWidth + (boxPadding * 2);
+            
+            // 1. Draw Background Box (Centered)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; 
+            ctx.fillRect(centerX - (totalBoxWidth / 2), centerY - (boxHeight / 2), totalBoxWidth, boxHeight);
+            
+            // 2. Draw Border (Orange)
+            ctx.strokeStyle = 'rgba(255, 107, 53, 0.6)';
+            ctx.lineWidth = Math.max(3, fontSize * 0.08);
+            ctx.strokeRect(centerX - (totalBoxWidth / 2), centerY - (boxHeight / 2), totalBoxWidth, boxHeight);
 
-            // Semi-transparent black bg
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'; 
-            // Rounded rect hack (standard rect for simplicity)
-            ctx.fillRect(x, y, textWidth + (boxPadding * 2), boxHeight);
-            
-            // Border (Orange)
-            ctx.strokeStyle = 'rgba(255, 107, 53, 0.5)';
+            // 3. Draw Horizontal Lines along the watermark
+            const lineWidth = img.width * 0.15; // 15% of image width for side lines
+            ctx.beginPath();
+            ctx.moveTo(centerX - (totalBoxWidth / 2) - lineWidth, centerY);
+            ctx.lineTo(centerX - (totalBoxWidth / 2), centerY);
+            ctx.moveTo(centerX + (totalBoxWidth / 2), centerY);
+            ctx.lineTo(centerX + (totalBoxWidth / 2) + lineWidth, centerY);
+            ctx.strokeStyle = 'rgba(255, 107, 53, 0.4)';
             ctx.lineWidth = Math.max(2, fontSize * 0.05);
-            ctx.strokeRect(x, y, textWidth + (boxPadding * 2), boxHeight);
+            ctx.stroke();
 
-            // Text (Brand Orange)
+            // 4. Draw Text
             ctx.fillStyle = '#FF6B35'; 
-            ctx.textAlign = 'left';
+            ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            
-            // Glow effect
             ctx.shadowColor = '#FF6B35';
-            ctx.shadowBlur = 10;
-            
-            // Slight Y adjustment for visual centering if font has odd baseline
-            ctx.fillText(text, x + boxPadding, y + (boxHeight / 2) + (fontSize * 0.05));
-
-             // Reset shadow
-             ctx.shadowBlur = 0;
+            ctx.shadowBlur = 15;
+            ctx.fillText(text, centerX, centerY + (fontSize * 0.05));
+            ctx.shadowBlur = 0;
 
             // Export and Download
             canvas.toBlob((blob) => {
