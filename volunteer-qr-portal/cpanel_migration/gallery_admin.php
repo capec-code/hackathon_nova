@@ -117,32 +117,60 @@
             e.preventDefault();
             const btn = document.getElementById('btn-upload');
             const status = document.getElementById('upload-status');
-            const formData = new FormData(e.target);
+            const fileInput = document.getElementById('file-input');
+            const files = fileInput.files;
+            
+            if (files.length === 0) return;
 
             btn.disabled = true;
-            btn.innerText = "Uploading...";
-            status.classList.add('hidden');
+            status.classList.remove('hidden');
+            status.className = "mt-4 p-3 rounded-lg bg-orange-500/20 text-orange-400 block border border-orange-500/30";
 
-            try {
-                const res = await fetch('upload_handler.php', { method: 'POST', body: formData });
-                const data = await res.json();
-                
-                if(data.success) {
-                    status.innerText = `Success! Uploaded ${data.uploaded.length} files.`;
-                    status.className = "mt-4 p-3 rounded-lg bg-green-500/20 text-green-400 block border border-green-500/30";
-                    e.target.reset();
-                    updateFileList({files: []});
-                    loadItems();
-                } else {
-                    throw new Error(data.error || "Upload failed");
+            const BATCH_SIZE = 10;
+            const totalBatches = Math.ceil(files.length / BATCH_SIZE);
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (let i = 0; i < totalBatches; i++) {
+                const start = i * BATCH_SIZE;
+                const end = Math.min(start + BATCH_SIZE, files.length);
+                const batchFiles = Array.from(files).slice(start, end);
+
+                status.innerText = `Uploading batch ${i + 1} of ${totalBatches}... (${end}/${files.length})`;
+
+                const formData = new FormData(e.target);
+                formData.delete('file[]'); // Clear any bound files
+                batchFiles.forEach(file => formData.append('file[]', file));
+
+                try {
+                    const res = await fetch('upload_handler.php', { method: 'POST', body: formData });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        successCount += batchFiles.length;
+                    } else {
+                        errorCount += batchFiles.length;
+                        console.error("Batch error:", data.errors);
+                    }
+                } catch (err) {
+                    errorCount += batchFiles.length;
+                    console.error("Fetch error:", err);
                 }
-            } catch (err) {
-                status.innerText = "Error: " + err.message;
-                status.className = "mt-4 p-3 rounded-lg bg-red-500/20 text-red-400 block border border-red-500/30";
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Process Upload";
             }
+
+            if (successCount > 0) {
+                status.innerText = `Successfully uploaded ${successCount} files! ${errorCount > 0 ? `(${errorCount} failed)` : ''}`;
+                status.className = "mt-4 p-3 rounded-lg bg-green-500/20 text-green-400 block border border-green-500/30";
+                e.target.reset();
+                updateFileList({files: []});
+                loadItems();
+            } else {
+                status.innerText = "Upload failed. Check console for details.";
+                status.className = "mt-4 p-3 rounded-lg bg-red-500/20 text-red-400 block border border-red-500/30";
+            }
+
+            btn.disabled = false;
+            btn.innerText = "Process Upload";
         };
 
         function toggleSelectAll(checkbox) {
