@@ -6,7 +6,7 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://novaspark.tech/</loc>
+    <loc>https://hackathon-nova.com/</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
   
   <!-- Announcements -->
   <url>
-    <loc>https://novaspark.tech/pages/announcements.html</loc>
+    <loc>https://hackathon-nova.com/pages/announcements.html</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -22,7 +22,7 @@
   
   <!-- Gallery -->
   <url>
-    <loc>https://novaspark.tech/pages/gallery.html</loc>
+    <loc>https://hackathon-nova.com/pages/gallery.html</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -30,7 +30,7 @@
   
   <!-- Schedule -->
   <url>
-    <loc>https://novaspark.tech/pages/schedule.html</loc>
+    <loc>https://hackathon-nova.com/pages/schedule.html</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -38,7 +38,7 @@
   
   <!-- Code of Conduct -->
   <url>
-    <loc>https://novaspark.tech/pages/codeOfConduct.html</loc>
+    <loc>https://hackathon-nova.com/pages/codeOfConduct.html</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -46,7 +46,7 @@
   
   <!-- Terms of Service -->
   <url>
-    <loc>https://novaspark.tech/pages/termsOfService.html</loc>
+    <loc>https://hackathon-nova.com/pages/termsOfService.html</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -54,7 +54,7 @@
   
   <!-- Sponsor Contact -->
   <url>
-    <loc>https://novaspark.tech/pages/sponsor-contact.html</loc>
+    <loc>https://hackathon-nova.com/pages/sponsor-contact.html</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

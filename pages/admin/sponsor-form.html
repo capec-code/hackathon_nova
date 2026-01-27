@@ -34,7 +34,7 @@
     <nav class="bg-black/80 backdrop-blur-lg border-b border-gray-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="dashboard.html" class="flex items-center text-gray-300 hover:text-white transition">
+                <a href="index.html" class="flex items-center text-gray-300 hover:text-white transition">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
                 </a>
                 <div class="font-bold text-xl text-orange-500" id="page-title">New Sponsor</div>
@@ -52,6 +52,14 @@
                         placeholder="e.g. Tech Company Inc.">
                 </div>
 
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                    <textarea id="description" rows="3" class="input-dark w-full rounded-lg px-4 py-3 transition"
+                        placeholder="Custom description for the sponsor/founder..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Optional. Overrides the default description text.</p>
+                </div>
+
                 <!-- Category & Display Order -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -59,11 +67,15 @@
                         <select id="category" required
                             class="input-dark w-full bg-white text-black rounded-lg px-4 py-3 transition cursor-pointer">
                             <option value="title" class="bg-white text-black">Title Sponsor</option>
+                            <option value="global_education_partner" class="bg-white text-black">Global Education Partner (VVIP)</option>
+                            <option value="innovative_tech_partner" class="bg-white text-black">Innovative Tech Partner</option>
                             <option value="gold" class="bg-white text-black">Gold Sponsor</option>
                             <option value="silver" class="bg-white text-black">Silver Sponsor</option>
                             <option value="tech" class="bg-white text-black">Tech Partner</option>
                             <option value="internet" class="bg-white text-black">Internet Partner</option>
                             <option value="printing" class="bg-white text-black">Printing Partner</option>
+                            <option value="strategic" class="bg-white text-black">Strategic Community Partner</option>
+                            <option value="founder" class="bg-white text-black">Founder's Initiative</option>
                             <option value="community" class="bg-white text-black">Community Partner</option>
                             <option value="media" class="bg-white text-black">Media Partner</option>
                         </select>
@@ -145,7 +157,7 @@
 
                 <!-- Actions -->
                 <div class="flex justify-end gap-4 pt-4 border-t border-gray-700">
-                    <a href="dashboard.html"
+                    <a href="index.html"
                         class="px-6 py-2 rounded-lg text-gray-300 hover:text-white transition">Cancel</a>
                     <button type="submit" id="save-btn"
                         class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-2 rounded-lg font-bold hover:shadow-lg hover:shadow-orange-500/30 transition">
@@ -220,6 +232,7 @@
 
                 if (data) {
                     document.getElementById('name').value = data.name || '';
+                    document.getElementById('description').value = data.description || '';
                     document.getElementById('category').value = data.category || 'silver';
                     document.getElementById('display-order').value = data.display_order || 0;
                     document.getElementById('website-url').value = data.website_url || '';
@@ -302,6 +315,7 @@
             e.preventDefault();
 
             const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
             const category = document.getElementById('category').value;
             const displayOrder = parseInt(document.getElementById('display-order').value) || 0;
             let websiteUrl = document.getElementById('website-url').value.trim();
@@ -342,6 +356,7 @@
 
                 const payload = {
                     name,
+                    description,
                     category,
                     display_order: displayOrder,
                     is_active: isActive,
@@ -408,7 +423,7 @@
                 if (error) throw error;
 
                 // Success
-                window.location.href = 'dashboard.html#sponsors';
+                window.location.href = 'index.html#sponsors';
             } catch (error) {
                 console.error('Error saving:', error);
                 alert('Error saving sponsor: ' + error.message);

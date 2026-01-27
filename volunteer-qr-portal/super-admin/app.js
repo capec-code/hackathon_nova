@@ -74,6 +74,9 @@ function showView(viewId) {
     if(viewId === 'logs') loadLogs();
     if(viewId === 'users') loadUsers();
     if(viewId === 'leaderboard') loadLeaderboard();
+    if(viewId === 'codes') loadFinanceCodes();
+    if(viewId === 'goods') loadFinanceGoods();
+    if(viewId === 'expenses') loadFinanceExpenses();
 }
 
 async function loadStats() {
@@ -338,4 +341,217 @@ window.switchDetailTab = async (type) => {
 
 window.closeModal = () => {
     document.getElementById('modal-vol-detail').classList.add('hidden');
+};
+// --- FINANCE & GOODS MANAGEMENT ---
+
+async function loadFinanceCodes() {
+    const { data, error } = await sb.from('secret_codes').select('*').order('created_at', { ascending: false });
+    const tbody = document.getElementById('codes-table-body');
+    if (error) return;
+    
+    const rows = data.map(c => `
+        <tr>
+            <td style="font-family:monospace; font-weight:bold; color:var(--accent-color);">${c.code}</td>
+            <td>${c.assigned_to || '---'}</td>
+            <td>
+                <span class="tag" style="background:${c.is_active ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)'}; color:${c.is_active ? 'var(--success-color)' : 'var(--danger-color)'};">
+                    ${c.is_active ? 'ACTIVE' : 'DISABLED'}
+                </span>
+            </td>
+            <td style="display:flex; gap:10px;">
+                <button class="btn secondary small" onclick="editSecretCode('${c.id}', '${c.code}')" title="Edit Code">✏️</button>
+                <button class="btn secondary small" onclick="toggleCodeStatus('${c.id}', ${c.is_active})" title="Toggle Status">🔄</button>
+                <button class="btn secondary small" onclick="deleteSecretCode('${c.id}')" title="Delete">🗑️</button>
+            </td>
+        </tr>
+    `).join('');
+
+    const cards = data.map(c => `
+        <div class="mobile-card">
+            <div class="flex-row">
+                <span class="font-bold text-accent">${c.code}</span>
+                <span class="tag ${c.is_active ? 'success' : 'danger'}">${c.is_active ? 'ACTIVE' : 'DISABLED'}</span>
+            </div>
+            <div class="meta-row">Assigned: ${c.assigned_to || '---'}</div>
+            <div class="action-row">
+                <button class="btn secondary small" onclick="editSecretCode('${c.id}', '${c.code}')">✏️ Edit</button>
+                <button class="btn secondary small" onclick="toggleCodeStatus('${c.id}', ${c.is_active})">🔄 Toggle</button>
+                <button class="btn secondary small" onclick="deleteSecretCode('${c.id}')">🗑️ Delete</button>
+            </div>
+        </div>
+    `).join('');
+
+    renderResponsiveTable('codes', rows, cards);
+}
+
+window.generateNewCode = async () => {
+    const code = prompt("Enter a custom memorable code (or leave empty for random):");
+    if (code === null) return;
+    
+    const finalCode = code.trim() || Math.random().toString(36).substring(2, 8).toUpperCase();
+    
+    const assigned = prompt("Assign this code to (Name/Role):");
+    if (assigned === null) return;
+    
+    const { error } = await sb.from('secret_codes').insert([{ code: finalCode, assigned_to: assigned, is_active: true }]);
+    
+    if (error) alert("Error creating code: " + error.message);
+    else loadFinanceCodes();
+};
+
+window.editSecretCode = async (id, oldCode) => {
+    const newCode = prompt("Update secret code (make it memorable):", oldCode);
+    if (!newCode || newCode === oldCode) return;
+    
+    const { error } = await sb.from('secret_codes').update({ code: newCode.trim() }).eq('id', id);
+    if (error) alert("Error updating code: " + error.message);
+    else loadFinanceCodes();
+};
+
+window.toggleCodeStatus = async (id, currentStatus) => {
+    const { error } = await sb.from('secret_codes').update({ is_active: !currentStatus }).eq('id', id);
+    if (!error) loadFinanceCodes();
+};
+
+window.deleteSecretCode = async (id) => {
+    if (confirm("Delete this secret code?")) {
+        const { error } = await sb.from('secret_codes').delete().eq('id', id);
+        if (!error) loadFinanceCodes();
+    }
+};
+
+async function loadFinanceGoods() {
+    const { data, error } = await sb.from('goods').select('*').order('created_at', { ascending: false });
+    if (error) return;
+
+    const rows = data.map(g => `
+        <tr>
+            <td>
+                <strong>${g.name}</strong>
+                <div style="font-size:0.7rem; color:var(--text-secondary);">${g.vendor || 'Unknown Vendor'}</div>
+            </td>
+            <td>${g.quantity}</td>
+            <td><span class="tag" style="background:rgba(255,255,255,0.05);">${g.category}</span></td>
+            <td>
+                <span class="tag" style="background:${g.status === 'Bought' ? 'rgba(34,197,94,0.1)' : 'rgba(249,115,22,0.1)'}; color:${g.status === 'Bought' ? 'var(--success-color)' : '#fb923c'};">
+                    ${g.status}
+                </span>
+            </td>
+            <td style="text-align:right;">Rs. ${parseFloat(g.estimated_cost).toLocaleString()}</td>
+            <td style="text-align:right; font-weight:bold;">Rs. ${parseFloat(g.actual_cost).toLocaleString()}</td>
+        </tr>
+    `).join('');
+
+    const cards = data.map(g => `
+        <div class="mobile-card">
+            <div class="flex-row">
+                <span class="font-bold">${g.name}</span>
+                <span class="tag ${g.status === 'Bought' ? 'success' : 'warning'}">${g.status}</span>
+            </div>
+            <div class="meta-row">${g.category} • Qty: ${g.quantity}</div>
+            <div class="footer-grid">
+                <div><span class="label">Est.</span> Rs. ${parseFloat(g.estimated_cost).toLocaleString()}</div>
+                <div style="text-align:right;"><span class="label">Actual</span> Rs. ${parseFloat(g.actual_cost).toLocaleString()}</div>
+            </div>
+        </div>
+    `).join('');
+
+    renderResponsiveTable('goods', rows, cards);
+}
+
+async function loadFinanceExpenses() {
+    const { data, error } = await sb.from('expenses').select('*').order('created_at', { ascending: false });
+    if (error) return;
+
+    const rows = data.map(e => `
+        <tr>
+            <td>
+                <strong>${e.title}</strong>
+                <div style="font-size:0.7rem; color:var(--text-secondary);">${new Date(e.created_at).toLocaleDateString()}</div>
+            </td>
+            <td style="font-family:monospace; font-size:0.8rem;">${e.issued_by_code}</td>
+            <td>
+                <span class="tag" style="background:${e.status === 'Approved' ? 'rgba(34,197,94,0.1)' : (e.status === 'Rejected' ? 'rgba(239,68,68,0.1)' : 'rgba(249,115,22,0.1)')}; color:${e.status === 'Approved' ? 'var(--success-color)' : (e.status === 'Rejected' ? 'var(--danger-color)' : '#fb923c')};">
+                    ${e.status}
+                </span>
+            </td>
+            <td style="text-align:right; font-weight:bold;">Rs. ${parseFloat(e.amount).toLocaleString()}</td>
+            <td style="text-align:center;">
+                ${e.proof_url ? `<a href="${e.proof_url}" target="_blank" title="View Receipt">📄</a>` : '---'}
+            </td>
+            <td style="text-align:right;">
+                <button class="btn secondary small" onclick="updateExpenseState('${e.id}', 'Approved')">✅</button>
+                <button class="btn secondary small" onclick="updateExpenseState('${e.id}', 'Rejected')">❌</button>
+            </td>
+        </tr>
+    `).join('');
+
+    const cards = data.map(e => `
+        <div class="mobile-card">
+            <div class="flex-row">
+                <span class="font-bold">${e.title}</span>
+                <span class="tag ${e.status === 'Approved' ? 'success' : (e.status === 'Rejected' ? 'danger' : 'warning')}">${e.status}</span>
+            </div>
+            <div class="meta-row">${new Date(e.created_at).toLocaleDateString()} • ${e.issued_by_code}</div>
+            <div class="flex-row" style="margin-top:10px;">
+                <span class="font-bold">Rs. ${parseFloat(e.amount).toLocaleString()}</span>
+                <div style="display:flex; gap:5px;">
+                     ${e.proof_url ? `<a href="${e.proof_url}" target="_blank" class="btn secondary small">📄 Proof</a>` : ''}
+                     <button class="btn secondary small" onclick="updateExpenseState('${e.id}', 'Approved')">✅</button>
+                     <button class="btn secondary small" onclick="updateExpenseState('${e.id}', 'Rejected')">❌</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    renderResponsiveTable('expenses', rows, cards);
+}
+
+function renderResponsiveTable(viewName, rowHtml, cardHtml) {
+    const tableBody = document.getElementById(`${viewName}-table-body`);
+    const mobileList = document.getElementById(`${viewName}-mobile-list`);
+    
+    if (tableBody) tableBody.innerHTML = rowHtml || `<tr><td colspan="10" style="text-align:center; padding:40px; color:var(--text-secondary);">No data found</td></tr>`;
+    if (mobileList) mobileList.innerHTML = cardHtml || `<div style="text-align:center; padding:40px; color:var(--text-secondary);">No data found</div>`;
+}
+
+window.updateExpenseState = async (id, status) => {
+    const { error } = await sb.from('expenses').update({ status }).eq('id', id);
+    if (!error) loadFinanceExpenses();
+};
+
+window.exportFinanceReport = async () => {
+    try {
+        const [goodsRes, expensesRes] = await Promise.all([
+            sb.from('goods').select('*'),
+            sb.from('expenses').select('*')
+        ]);
+        
+        const goods = goodsRes.data || [];
+        const expenses = expensesRes.data || [];
+
+        let csv = 'Type,ID,Title/Name,Amount/Cost,Status,Date,Issued By/Vendor\n';
+        
+        goods.forEach(g => {
+            csv += `GOOD,${g.id},"${g.name}",${g.actual_cost || g.estimated_cost},${g.status},${g.purchase_date || '-'},"${g.vendor || ''}"\n`;
+        });
+        
+        expenses.forEach(e => {
+            csv += `EXPENSE,${e.id},"${e.title}",${e.amount},${e.status},${e.date},"${e.issued_by_code}"\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Nova_Finance_Report_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        alert("Master finance report exported successfully!");
+    } catch (error) {
+        console.error("Export Error:", error);
+        alert("Failed to export report.");
+    }
 };

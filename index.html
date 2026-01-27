@@ -18,7 +18,7 @@
   <meta name="revisit-after" content="7 days" />
 
   <!-- Canonical -->
-  <link rel="canonical" href="https://novaspark.tech/" />
+  <link rel="canonical" href="https://hackathon-nova.com/" />
 
   <!-- X-UA-Compatible -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -28,8 +28,8 @@
   <meta property="og:title" content="Hackathon Nova 2026 | 60-Hour Student Hackathon in Pokhara" />
   <meta property="og:description"
     content="Join Hackathon Nova at Pokhara Engineering College. A 60-hour innovation challenge organized by CAPEC & ITEC-PEC. Build, innovate, and compete for exciting prizes." />
-  <meta property="og:url" content="https://novaspark.tech/" />
-  <meta property="og:image" content="https://novaspark.tech/assets/logo.png" />
+  <meta property="og:url" content="https://hackathon-nova.com/" />
+  <meta property="og:image" content="https://hackathon-nova.com/assets/logo.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Hackathon Nova 2026 - Pokhara Engineering College" />
@@ -41,7 +41,7 @@
   <meta name="twitter:title" content="Hackathon Nova 2026 | Pokhara Engineering College" />
   <meta name="twitter:description"
     content="60-hour student hackathon by CAPEC × ITEC-PEC. Build, innovate, win prizes." />
-  <meta name="twitter:image" content="https://novaspark.tech/assets/logo.png" />
+  <meta name="twitter:image" content="https://hackathon-nova.com/assets/logo.png" />
   <meta name="twitter:image:alt" content="Hackathon Nova 2026" />
 
   <!-- Favicons -->
@@ -291,13 +291,13 @@
       }
     ],
     "description": "Hackathon Nova 2026 is a 60-hour student hackathon at Pokhara Engineering College focused on innovation, collaboration, and real-world problem solving. Join Nepal's premier student-led technology innovation challenge.",
-    "image": "https://novaspark.tech/assets/logo.png",
+    "image": "https://hackathon-nova.com/assets/logo.png",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "NPR",
       "availability": "https://schema.org/InStock",
-      "url": "https://novaspark.tech/#register"
+      "url": "https://hackathon-nova.com/#register"
     }
   }
   </script>
@@ -309,8 +309,8 @@
     "@type": "Organization",
     "name": "CAPEC × ITEC-PEC",
     "alternateName": "Computer Association of Pokhara Engineering College × Information Technology Engineering Club",
-    "url": "https://novaspark.tech",
-    "logo": "https://novaspark.tech/assets/logo.png",
+    "url": "https://hackathon-nova.com",
+    "logo": "https://hackathon-nova.com/assets/logo.png",
     "sameAs": [],
     "contactPoint": {
       "@type": "ContactPoint",
@@ -369,7 +369,7 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
           <a href="/">
-            <img src="assets/logo.png" alt="Hackathon Nova Logo" class="w-10 h-10 rounded-lg"
+            <img src="assets/logo.png" alt="Hackathon Nova Logo" class="w-10 h-10 rounded-lg" loading="lazy"
               onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';" /></a>
           <div>
             <a href="/">
@@ -515,6 +515,12 @@
           View Rules <i class="fas fa-book ml-2 text-sm opacity-70"></i>
         </a>
       </div>
+
+      <!-- GitHub Education Authority Line -->
+      <div class="mt-12 flex items-center justify-center space-x-3 opacity-70 hover:opacity-100 transition-opacity duration-300 relative z-30">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo" class="w-5 h-5 brightness-100 invert" />
+        <span class="text-sm font-medium tracking-wide text-white">Proudly supported by <a href="https://education.github.com" target="_blank" rel="noopener noreferrer" class="text-white font-semibold">GitHub Education</a></span>
+      </div>
     </div>
 
     <div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 animate-bounce z-50">
@@ -559,6 +565,12 @@
             developers, and innovators to showcase their skills, learn from
             industry Co-ordinators, and compete for exciting prizes.
           </p>
+          <div class="mb-6 p-4 bg-white/5 border border-white/10 rounded-xl flex items-center space-x-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo" class="w-8 h-8 brightness-0 invert opacity-80" />
+            <p class="text-sm text-gray-300">
+              Proudly supported by <span class="text-white font-bold">GitHub Education</span>, fostering the next generation of software engineers and innovators in Nepal.
+            </p>
+          </div>
           <div class="bg-gradient-to-r from-cyan-500/10 to-blue-600/10 border border-cyan-500/30 rounded-lg p-6">
             <h4 class="text-xl font-bold mb-3" style="color: var(--green)">
               Who Can Participate?
@@ -978,14 +990,14 @@
             <div class="flex-1 md:w-1/2 md:pr-12 md:text-right relative z-10">
               <div
                 class="bg-gradient-to-br from-cyan-500/10 to-transparent border border-gray-800 rounded-xl p-4 md:p-6">
-                <h3 class="text-lg md:text-2xl font-bold text-white mb-2">
-                  Registration Opens
+                <h3 id="timeline-reg-title" class="text-lg md:text-2xl font-bold text-green-500 mb-2">
+                  Registration Is Open now
                 </h3>
-                <p class="text-cyan-400 font-semibold mb-2 text-sm md:text-base">
-                  Registration is open register your team now
+                <p id="timeline-reg-status" class="text-green-400 font-semibold mb-2 text-sm md:text-base">
+                  Registration is open till 23 January 
                 </p>
-                <p class="text-gray-400 text-sm md:text-base">
-                  Register your team and secure your spot for the hackathon
+                <p id="timeline-reg-desc" class="text-gray-400 text-sm md:text-base">
+                  Registration your team now !!! 
                 </p>
            
               </div>
@@ -1238,6 +1250,8 @@
       </div>
     </div>
   </section>
+
+
 
   <section id="rules" class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1640,213 +1654,6 @@
     </div>
   </section>
 
-  <!-- sponsers -->
-  <section id="sponsors" class="py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl sm:text-5xl font-black mb-4">
-          Our <span class="gradient-text">Sponsors</span>
-        </h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
-        <p class="text-gray-200 text-lg">
-          Powered by industry leaders and innovators
-        </p>
-      </div>
-
-      <div class="mb-16">
-        <div class="text-center mb-8">
-          <h3 class="text-3xl font-bold text-white mb-2">Title Sponsor</h3>
-          <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
-        </div>
-        <div class="flex justify-center">
-          <div id="sponsors-title" class="w-full max-w-md mx-auto"></div>
-        </div>
-      </div>
-
-      <div class="mb-16">
-        <div class="text-center mb-8">
-          <h3 class="text-2xl font-bold text-white mb-2">Gold Sponsors</h3>
-          <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
-        </div>
-        <div id="sponsors-gold" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch"></div>
-      </div>
-
-      <div class="mb-16">
-        <div class="text-center mb-8">
-          <h3 class="text-xl font-bold text-white mb-2">Silver Sponsors</h3>
-          <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
-        </div>
-        <div id="sponsors-silver" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 items-stretch"></div>
-      </div>
-
-      <!-- Combined Tech, Internet, & Printing Partners Section -->
-      <div class="flex flex-col md:flex-row mb-16 items-stretch justify-center">
-        <!-- Tech Partners -->
-        <div class="flex-1 flex flex-col items-center">
-          <div class="w-full max-w-xs mx-auto">
-            <div class="text-center mb-6">
-              <h3 class="text-lg font-bold text-white mb-2">Tech Partners</h3>
-              <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-600 mx-auto"></div>
-            </div>
-            <div id="sponsors-tech" class="grid grid-cols-1 gap-4 items-center justify-center"></div>
-          </div>
-        </div>
-
-        <!-- Vertical Separator (Desktop) / Horizontal Separator (Mobile) -->
-        <div
-          class="md:w-px md:h-auto w-full h-px bg-gradient-to-r md:bg-gradient-to-b from-transparent via-white/20 to-transparent my-8 md:my-0 mx-0 md:mx-8">
-        </div>
-
-        <!-- Internet Partner -->
-        <div class="flex-1 flex flex-col items-center">
-          <div class="w-full max-w-xs mx-auto">
-            <div class="text-center mb-6">
-              <h3 class="text-lg font-bold text-white mb-2">
-                Internet Partner
-              </h3>
-              <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 mx-auto"></div>
-            </div>
-            <div id="sponsors-internet" class="grid grid-cols-1 gap-4 items-center justify-center"></div>
-          </div>
-        </div>
-
-        <!-- Vertical Separator (Desktop) / Horizontal Separator (Mobile) -->
-        <div
-          class="md:w-px md:h-auto w-full h-px bg-gradient-to-r md:bg-gradient-to-b from-transparent via-white/20 to-transparent my-8 md:my-0 mx-0 md:mx-8">
-        </div>
-
-        <!-- Printing Partner -->
-        <div class="flex-1 flex flex-col items-center">
-          <div class="w-full max-w-xs mx-auto">
-            <div class="text-center mb-6">
-              <h3 class="text-lg font-bold text-white mb-2">
-                Printing Partner
-              </h3>
-              <div class="w-12 h-1 bg-gradient-to-r from-orange-500 to-red-500 mx-auto"></div>
-            </div>
-            <div id="sponsors-printing" class="grid grid-cols-1 gap-4 items-center justify-center"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-8 mb-16">
-        <div>
-          <div class="text-center mb-6">
-            <h3 class="text-lg font-bold text-white mb-2">
-              Community Partners
-            </h3>
-            <div class="w-12 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto"></div>
-          </div>
-          <div id="sponsors-community" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4 items-center"></div>
-        </div>
-
-        <div>
-          <div class="text-center mb-6">
-            <h3 class="text-lg font-bold text-white mb-2">Media Partners</h3>
-            <div class="w-12 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto"></div>
-          </div>
-          <div id="sponsors-media" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4 items-center"></div>
-        </div>
-      </div>
-
-      <div class="text-center">
-        <div
-          class="bg-gradient-to-r from-cyan-500/10 to-blue-600/10 border border-cyan-500/30 rounded-xl p-8 inline-block">
-          <h3 class="text-2xl font-bold text-white mb-4">Become a Sponsor</h3>
-          <p class="text-green-600 mb-6 max-w-2xl">
-            Partner with Hackathon Nova 2026 and connect with Nepal's
-            brightest tech talent. Showcase your brand to 2000+ innovators and
-            industry professionals.
-          </p>
-          <a href="pages/sponsor-contact.html"
-            class="bg-gradient-to-r from-orange-600 to-orange-600 text-white px-8 py-3 rounded-lg font-bold hover:shadow-xl hover:shadow-cyan-500/50 transition inline-block">
-            <i class="fas fa-envelope mr-2"></i> Contact for Sponsorship
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-
-  <section id="mentors" class="py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl sm:text-5xl font-black mb-4">
-          Mentors & <span class="gradient-text">Judges</span>
-        </h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
-        <p class="text-white text-lg">
-          Learn from and be evaluated by industry Co-ordinators
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div
-          class="bg-gradient-to-br from-cyan-500/5 to-transparent border border-gray-800 rounded-xl p-6 text-center card-hover">
-          <div
-            class="w-32 h-32 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
-            <i class="fas fa-user"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-2">Co-ordinator Name</h3>
-          <p class="text-sm mb-2" style="color: var(--green)">Revealing</p>
-          <p class="text-sm mb-4">Soon...</p>
-          <a href="#" class="text-gray-400 hover:text-cyan-400 transition">
-            <i class="fab fa-linkedin text-2xl"></i>
-          </a>
-        </div>
-
-        <div
-          class="bg-gradient-to-br from-blue-600/5 to-transparent border border-gray-800 rounded-xl p-6 text-center card-hover">
-          <div
-            class="w-32 h-32 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
-            <i class="fas fa-user"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-2">Co-ordinator Name</h3>
-          <p class="text-sm mb-2" style="color: var(--green)">Revealing</p>
-          <p class="text-sm mb-4">Soon...</p>
-          <a href="#" class="text-gray-400 hover:text-blue-400 transition">
-            <i class="fab fa-linkedin text-2xl"></i>
-          </a>
-        </div>
-
-        <div
-          class="bg-gradient-to-br from-green-500/5 to-transparent border border-gray-800 rounded-xl p-6 text-center card-hover">
-          <div
-            class="w-32 h-32 bg-gradient-to-br from-green-500 to-cyan-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
-            <i class="fas fa-user"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-2">Co-ordinator Name</h3>
-          <p class="text-sm mb-2" style="color: var(--green)">Revealing</p>
-          <p class="text-sm mb-4">Soon...</p>
-          <a href="#" class="text-gray-400 hover:text-green-400 transition">
-            <i class="fab fa-linkedin text-2xl"></i>
-          </a>
-        </div>
-
-        <div
-          class="bg-gradient-to-br from-purple-500/5 to-transparent border border-gray-800 rounded-xl p-6 text-center card-hover">
-          <div
-            class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl">
-            <i class="fas fa-user"></i>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-2">Co-ordinator Name</h3>
-          <p class="text-sm mb-2" style="color: var(--green)">Revealing</p>
-          <p class="text-sm mb-4">Soon...</p>
-          <a href="#" class="text-gray-400 hover:text-purple-400 transition">
-            <i class="fab fa-linkedin text-2xl"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="mt-12 text-center">
-        <p class="text-gray-400 text-lg">
-          More mentors and judges to be announced soon!
-        </p>
-      </div>
-    </div>
-  </section>
-
   <section id="register" class="py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
@@ -1919,7 +1726,7 @@
         <div class="text-center">
           <p class="text-white mb-6">
             Registration closes on
-            <strong class="text-green-400">January 25, 2026</strong>
+            <strong class="text-green-400">January 23, 2026</strong>
           </p>
           <a href="https://forms.gle/ERX6Va5zVJqSMHJa8" target="_blank"
             class="bg-orange-500 text-white px-10 py-4 rounded-lg font-bold text-lg hover:shadow-xl hover:shadow-red-500/50 transition inline-block transform hover:scale-105">
@@ -1929,6 +1736,293 @@
             Limited spots available • First come, first served
           </p>
         </div>
+      </div>
+    </div>
+  </section>
+  <section id="sponsors" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl sm:text-5xl font-black mb-4">
+          Our <span class="gradient-text">Sponsors</span>
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
+        <p class="text-gray-200 text-lg">
+          Powered by industry leaders and innovators
+        </p>
+      </div>
+
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h3 class="text-3xl font-bold text-white mb-2">Title Sponsor</h3>
+          <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
+        </div>
+        <div class="flex justify-center">
+          <div id="sponsors-title" class="w-full max-w-md mx-auto"></div>
+        </div>
+      </div>
+
+      <!-- Global Education Partner Section (VVIP Professional Hierarchy) -->
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h3 class="text-3xl font-black text-white mb-2 tracking-wider">Global Education Partner</h3>
+          <div class="flex items-center justify-center gap-3 mb-4">
+             <div class="h-1 w-12 bg-gradient-to-r from-transparent to-yellow-500"></div>
+             <span class="text-yellow-500 font-black text-sm tracking-widest uppercase">Global Partner</span>
+             <div class="h-1 w-12 bg-gradient-to-l from-transparent to-yellow-500"></div>
+          </div>
+          <div class="w-32 h-1.5 bg-gradient-to-r from-yellow-500 via-cyan-400 to-blue-600 mx-auto mb-6 rounded-full shadow-lg shadow-yellow-500/20"></div>
+        </div>
+        <div class="flex justify-center">
+          <div id="sponsors-global-manual" class="w-full max-w-lg">
+            <div class="bg-gradient-to-br from-yellow-500/15 to-transparent border-2 border-yellow-500/60 rounded-2xl p-8 hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-500 flex flex-col items-center justify-center group relative overflow-hidden h-64 md:h-80">
+              <a href="https://education.github.com" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center justify-center h-full w-full">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Education" class="w-32 h-32 md:w-40 md:h-40 object-contain mb-6 brightness-0 invert" loading="lazy" />
+                <div class="sponsor-name text-white text-xl md:text-2xl font-bold text-center px-2 tracking-tight">GitHub Education</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+      <!-- Innovative Tech Partner Section (Professional Hierarchy) -->
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold text-white mb-2">Innovative Tech Partner</h3>
+          <div class="w-24 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 mx-auto mb-6"></div>
+        </div>
+        <div class="flex justify-center">
+          <div id="sponsors-innovative" class="w-full max-w-5xl flex flex-wrap gap-8 items-center justify-center mx-auto"></div>
+        </div>
+      </div>
+
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+      <!-- Combined Tech, Internet, & Printing Partners Section -->
+      <div class="flex flex-col md:flex-row mb-16 items-stretch justify-center">
+        <!-- Tech Partners -->
+        <div class="flex-1 flex flex-col items-center">
+          <div class="w-full max-w-xs mx-auto">
+            <div class="text-center mb-6">
+              <h3 class="text-lg font-bold text-white mb-2">Tech Partners</h3>
+              <div class="w-12 h-1 bg-gradient-to-r from-purple-500 to-pink-600 mx-auto"></div>
+            </div>
+            <div id="sponsors-tech" class="grid grid-cols-1 gap-4 items-center justify-center"></div>
+          </div>
+        </div>
+
+        <!-- Vertical Separator (Desktop) / Horizontal Separator (Mobile) -->
+        <div
+          class="md:w-px md:h-auto w-full h-px bg-gradient-to-r md:bg-gradient-to-b from-transparent via-white/20 to-transparent my-8 md:my-0 mx-0 md:mx-8">
+        </div>
+
+        <!-- Internet Partner -->
+        <div class="flex-1 flex flex-col items-center">
+          <div class="w-full max-w-xs mx-auto">
+            <div class="text-center mb-6">
+              <h3 class="text-lg font-bold text-white mb-2">
+                Internet Partner
+              </h3>
+              <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 mx-auto"></div>
+            </div>
+            <div id="sponsors-internet" class="grid grid-cols-1 gap-4 items-center justify-center"></div>
+          </div>
+        </div>
+
+        <!-- Vertical Separator (Desktop) / Horizontal Separator (Mobile) -->
+        <div
+          class="md:w-px md:h-auto w-full h-px bg-gradient-to-r md:bg-gradient-to-b from-transparent via-white/20 to-transparent my-8 md:my-0 mx-0 md:mx-8">
+        </div>
+
+        <!-- Printing Partner -->
+        <div class="flex-1 flex flex-col items-center">
+          <div class="w-full max-w-xs mx-auto">
+            <div class="text-center mb-6">
+              <h3 class="text-lg font-bold text-white mb-2">
+                Printing Partner
+              </h3>
+              <div class="w-12 h-1 bg-gradient-to-r from-orange-500 to-red-500 mx-auto"></div>
+            </div>
+            <div id="sponsors-printing" class="grid grid-cols-1 gap-4 items-center justify-center"></div>
+          </div>
+        </div>
+      </div>
+      <div class="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+      <!-- Strategic Community Partner -->
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h3 class="text-xl font-bold text-white mb-2">
+            Strategic Community Partner
+          </h3>
+          <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-indigo-500 mx-auto mb-6"></div>
+        </div>
+        <div class="flex justify-center">
+          <div id="sponsors-strategic" class="w-full max-w-5xl flex flex-wrap gap-8 items-center justify-center mx-auto"></div>
+        </div>
+      </div>
+
+      <!-- Community Partners -->
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h3 class="text-lg font-bold text-white mb-2">
+            Community Partners
+          </h3>
+          <div class="w-12 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mb-6"></div>
+        </div>
+        <div id="sponsors-community" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-center justify-center"></div>
+      </div>
+
+      <!-- Media Partners -->
+      <div class="mb-16">
+        <div class="text-center mb-8">
+          <h3 class="text-lg font-bold text-white mb-2">Media Partners</h3>
+          <div class="w-12 h-1 bg-gradient-to-r from-pink-500 to-rose-500 mx-auto mb-6"></div>
+        </div>
+        <div id="sponsors-media" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-center justify-center"></div>
+      </div>
+
+      <div class="text-center">
+        <div
+          class="bg-gradient-to-r from-cyan-500/10 to-blue-600/10 border border-cyan-500/30 rounded-xl p-8 inline-block">
+          <h3 class="text-2xl font-bold text-white mb-4">Become a Sponsor</h3>
+          <p class="text-green-600 mb-6 max-w-2xl">
+            Partner with Hackathon Nova 2026 and connect with Nepal's
+            brightest tech talent. Showcase your brand to 2000+ innovators and
+            industry professionals.
+          </p>
+          <a href="pages/sponsor-contact.html"
+            class="bg-gradient-to-r from-orange-600 to-orange-600 text-white px-8 py-3 rounded-lg font-bold hover:shadow-xl hover:shadow-cyan-500/50 transition inline-block">
+            <i class="fas fa-envelope mr-2"></i> Contact for Sponsorship
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+  <section id="mentors" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl sm:text-5xl font-black mb-4">
+          Mentors & <span class="gradient-text">Judges</span>
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
+        <p class="text-white text-lg">
+          Learn from and be evaluated by industry Co-ordinators
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Mentor Card 0 -->
+        <div class="group bg-gradient-to-br from-purple-500/10 to-transparent border border-gray-800 rounded-2xl p-6 text-center transform transition-all duration-300 hover:-translate-y-2 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/10">
+          <div class="relative mb-6 inline-block">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-purple-500/30 group-hover:border-purple-500 transition-colors">
+              <img src="./assets/mentors/bansraj.png" alt="Banshaj Paudel" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-900">
+              <i class="fas fa-crown text-xs"></i>
+            </div>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-1">Banshaj Paudel</h3>
+          <p class="text-purple-400 text-xs font-medium mb-4 uppercase tracking-wider">GitHub Campus Expert at GitHub Education<br>Founder & CEO at HookX</p>
+          <div class="flex justify-center space-x-4">
+            <a href="https://www.linkedin.com/in/banshaj/" class="text-gray-400 hover:text-purple-400 transition-colors">
+              <i class="fab fa-linkedin text-xl"></i>
+            </a>
+          
+          </div>
+        </div>
+
+        <!-- Mentor Card 1 -->
+        <div class="group bg-gradient-to-br from-cyan-500/10 to-transparent border border-gray-800 rounded-2xl p-6 text-center transform transition-all duration-300 hover:-translate-y-2 hover:border-cyan-500/50 hover:shadow-2xl hover:shadow-cyan-500/10">
+          <div class="relative mb-6 inline-block">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-cyan-500/30 group-hover:border-cyan-500 transition-colors">
+              <img src="./assets/mentors/bishalacharya.jpeg" alt="Bishal Acharya" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-cyan-500 text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-900">
+              <i class="fas fa-code text-xs"></i>
+            </div>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-1">Bishal Acharya</h3>
+          <p class="text-cyan-400 text-sm font-medium mb-4 uppercase tracking-wider">Tech Lead</p>
+          <div class="flex justify-center space-x-4">
+            <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
+              <i class="fab fa-linkedin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-github text-xl"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mentor Card 2 -->
+        <div class="group bg-gradient-to-br from-blue-600/10 to-transparent border border-gray-800 rounded-2xl p-6 text-center transform transition-all duration-300 hover:-translate-y-2 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10">
+          <div class="relative mb-6 inline-block">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-blue-500/30 group-hover:border-blue-500 transition-colors">
+              <img src="./assets/mentors/Prashant adhikari.jpeg" alt="Prashant Adhikari" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-900">
+              <i class="fas fa-laptop-code text-xs"></i>
+            </div>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-1">Prashant Adhikari</h3>
+          <p class="text-blue-400 text-sm font-medium mb-4 uppercase tracking-wider">Industry Expert</p>
+          <div class="flex justify-center space-x-4">
+            <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+              <i class="fab fa-linkedin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mentor Card 3 -->
+        <div class="group bg-gradient-to-br from-green-500/10 to-transparent border border-gray-800 rounded-2xl p-6 text-center transform transition-all duration-300 hover:-translate-y-2 hover:border-green-500/50 hover:shadow-2xl hover:shadow-green-500/10">
+          <div class="relative mb-6 inline-block">
+            <div class="w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-green-500/30 group-hover:border-green-500 transition-colors">
+              <img src="./assets/mentors/Bijen Poudel.jpeg" alt="Bijen Poudel" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-900">
+              <i class="fas fa-rocket text-xs"></i>
+            </div>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-1">Bijen Poudel</h3>
+          <p class="text-green-400 text-sm font-medium mb-4 uppercase tracking-wider">Lead Mentor</p>
+          <div class="flex justify-center space-x-4">
+            <a href="#" class="text-gray-400 hover:text-green-400 transition-colors">
+              <i class="fab fa-linkedin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors">
+              <i class="fab fa-globe text-xl"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+  </section>
+
+  <!-- Innovation by Our Founders Section -->
+  <section id="founders" class="py-20 bg-transparent text-white border-t border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl sm:text-5xl font-black mb-4 text-white">
+          Innovation by Our <span class="gradient-text">Founders</span>
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
+        <p class="text-gray-400 text-lg font-medium">
+          Initiatives by CAPEC & ITEC-PEC Leadership
+        </p>
+      </div>
+
+      <!-- Founder Cards Container -->
+      <div id="founders-list" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+        <!-- Dynamic content will be loaded here -->
       </div>
     </div>
   </section>
@@ -2191,13 +2285,14 @@
 
   </section>
 
+
   <footer class="bg-gradient-to-b border-t border-gray-800 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid md:grid-cols-4 gap-8 mb-8">
         <div>
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center">
-              <img src="/assets/logo.png" alt="" />
+              <img src="/assets/logo.png" alt="" loading="lazy" />
             </div>
             <div>
               <div class="text-white font-bold text-lg">
@@ -2258,15 +2353,14 @@
         </div>
 
         <div>
-          <h3 class="text-white font-bold mb-4">About Hackathon Nova</h3>
-          <p class="text-white-400 text-sm leading-relaxed mb-4">
-            Hackathon Nova is a 60-hour student-focused hackathon organized by
-            CAPEC and ITEC-PEC at Pokhara Engineering College.
+          <h3 class="text-white font-bold mb-4">Institutional Partner</h3>
+          <div class="flex items-center space-x-3 opacity-80 hover:opacity-100 transition-opacity">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo" class="w-6 h-6 brightness-0 invert" />
+            <span class="text-sm font-semibold text-gray-300">GitHub Education</span>
+          </div>
+          <p class="mt-4 text-xs text-gray-400 italic">
+            Empowering the next generation of students in Pokhara.
           </p>
-          <a href="https://forms.gle/ERX6Va5zVJqSMHJa8" target="_blank"
-            class="bg-orange-500 text-white px-6 py-2 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition inline-block">
-            Register Now
-          </a>
         </div>
       </div>
 
@@ -2275,6 +2369,9 @@
           <p class="text-white-400 text-sm mb-4 md:mb-0">
             © 2026 CAPEC - Hackathon Nova. All rights reserved.
           </p>
+          <div class="text-white-400 text-sm mb-4 md:mb-0">
+            Created by <span class="text-orange-500 font-semibold">Sajan Poudel</span> And <span class="text-orange-500 font-semibold">Suresh Subedi</span> on coordination with <span class="text-cyan-400 font-semibold">App Sansar</span> and <span class="text-cyan-400 font-semibold">NepQube.Studios</span>
+          </div>
           <div class="flex space-x-6 text-sm">
             <a href="#" class="text-white-400 hover:text-cyan-400 transition">Privacy Policy</a>
             <a href="pages/termsOfService.html" class="text-white-400 hover:text-cyan-400 transition">Terms of
@@ -2568,6 +2665,7 @@
   <script src="/assets/gallery-loader.js"></script>
   <script src="assets/back-to-top.js"></script>
 
+
   <!-- Load Sponsors from Database -->
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -2609,8 +2707,12 @@
             tech: [],
             internet: [],
             printing: [],
+            strategic: [],
             community: [],
-            media: []
+            media: [],
+            founder: [],
+            innovative_tech_partner: [],
+            global_education_partner: []
           };
 
           data.forEach(sponsor => {
@@ -2618,6 +2720,43 @@
               sponsorsByCategory[sponsor.category].push(sponsor);
             }
           });
+
+          // Render Founders function with specific design
+          const renderFounders = (founders) => {
+            const container = document.getElementById('founders-list');
+            if (!container) return;
+
+            if (founders.length > 0) {
+               container.innerHTML = founders.map(founder => {
+                 const href = founder.website_url || '#';
+                 const logo = founder.logo_url || '';
+                 const name = founder.name || 'Startup Name';
+                 
+                 return `
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-10 shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 w-full flex flex-col items-center text-center group relative overflow-hidden backdrop-blur-sm">
+          <div class="absolute top-0 w-full h-1 bg-gradient-to-r from-orange-500 to-green-600"></div>
+          
+          <div class="h-24 w-full mb-8 flex items-center justify-center">
+              ${logo ? `<img src="${logo}" alt="${name}" class="h-full w-auto object-contain" loading="lazy">` : 
+             `<div class="bg-white/10 text-gray-400 rounded-lg h-20 w-48 flex items-center justify-center border border-dashed border-white/20"><span class="text-sm">${name}</span></div>`}
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">${name}</h3>
+          
+          <p class="text-gray-400 mb-8 leading-relaxed">
+             ${founder.description || 'Revolutionizing the industry with cutting-edge technology and innovative solutions driven by passion.'}
+          </p>
+          
+          <a href="${href}" target="_blank" class="mt-auto inline-flex items-center text-orange-400 font-bold hover:text-orange-300 transition-colors group-hover:gap-2">
+            Visit Website <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+        </div>`;
+               }).join('\n');
+            }
+          };
+
+          // Render Founders
+          renderFounders(sponsorsByCategory.founder);
 
           // Render function
           const renderSponsors = (sponsors, containerId, cardClass) => {
@@ -2640,7 +2779,7 @@
                   <div class="${cardClass}">
                     ${href ? `<a ${href} class="flex flex-col items-center justify-center h-full w-full text-decoration-none">` : `<div class="flex flex-col items-center justify-center h-full w-full">`}
                       ${logo ?
-                    `<img src="${logo}" alt="${sponsor.name || ''}" class="${shouldShowName ? 'w-full h-auto object-contain mb-3 max-h-[70%]' : 'w-full h-full object-contain'}" onerror="this.style.display='none'; if(!this.parentElement.querySelector('.sponsor-name')) { this.parentElement.parentElement.classList.add('hidden'); }" />` :
+                    `<img src="${logo}" alt="${sponsor.name || ''}" class="${shouldShowName ? 'w-full h-auto object-contain mb-3 max-h-[70%]' : 'w-full h-full object-contain'}" loading="lazy" onerror="this.style.display='none'; if(!this.parentElement.querySelector('.sponsor-name')) { this.parentElement.parentElement.classList.add('hidden'); }" />` :
                     `<div class="text-gray-500 text-sm text-center ${shouldShowName ? 'mb-3' : ''}">${sponsor.name || 'No Logo'}</div>`
                   }
                       ${shouldShowName ? `<div class="sponsor-name text-white text-xs md:text-sm font-semibold text-center px-2 break-words">${sponsor.name}</div>` : ''}
@@ -2655,49 +2794,67 @@
           renderSponsors(
             sponsorsByCategory.title,
             'sponsors-title',
-            'bg-gradient-to-br from-yellow-500/10 to-transparent border-2 border-yellow-500/50 rounded-2xl p-4 w-full max-w-md mx-auto min-h-[12rem] md:min-h-[16rem] flex items-center justify-center hover:shadow-2xl hover:shadow-yellow-500/30 transition'
+            'bg-gradient-to-br from-yellow-500/10 to-transparent border-2 border-yellow-500/50 rounded-2xl p-4 w-full max-w-sm mx-auto min-h-[10rem] md:min-h-[14rem] flex items-center justify-center hover:shadow-2xl hover:shadow-yellow-500/30 transition'
+          );
+
+          renderSponsors(
+            sponsorsByCategory.global_education_partner,
+            'sponsors-global',
+            'bg-gradient-to-br from-yellow-500/15 to-transparent border-2 border-yellow-500/60 rounded-2xl p-8 hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-500 w-full max-w-lg min-h-[12rem] md:min-h-[16rem] flex items-center justify-center group relative overflow-hidden'
+          );
+
+          renderSponsors(
+            sponsorsByCategory.innovative_tech_partner,
+            'sponsors-innovative',
+            'bg-gradient-to-br from-cyan-500/10 to-transparent border-2 border-cyan-500/50 rounded-2xl p-6 hover:shadow-2xl hover:shadow-cyan-500/30 transition-all duration-300 w-full max-w-md min-h-[10rem] md:min-h-[14rem] flex items-center justify-center group'
           );
 
           renderSponsors(
             sponsorsByCategory.gold,
             'sponsors-gold',
-            'bg-gradient-to-br from-gray-300/10 to-transparent border border-gray-700 rounded-xl p-4 hover:shadow-xl hover:shadow-gray-400/20 transition min-h-[8rem] md:min-h-[10rem] flex items-center justify-center'
+            'bg-gradient-to-br from-gray-300/10 to-transparent border border-gray-700 rounded-xl p-4 hover:shadow-xl hover:shadow-gray-400/20 transition min-h-[6rem] md:min-h-[8rem] flex items-center justify-center'
           );
 
           renderSponsors(
             sponsorsByCategory.silver,
             'sponsors-silver',
-            'bg-gradient-to-br from-orange-400/5 to-transparent border border-gray-800 rounded-lg p-3 hover:shadow-lg hover:shadow-orange-400/10 transition min-h-[7rem] md:min-h-[8rem] flex items-center justify-center'
+            'bg-gradient-to-br from-orange-400/5 to-transparent border border-gray-800 rounded-lg p-3 hover:shadow-lg hover:shadow-orange-400/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
           );
 
           renderSponsors(
             sponsorsByCategory.tech,
             'sponsors-tech',
-            'bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-800 rounded-lg p-3 hover:shadow-lg hover:shadow-purple-500/10 transition min-h-[7rem] md:min-h-[8rem] flex items-center justify-center'
+            'bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-800 rounded-lg p-3 hover:shadow-lg hover:shadow-purple-500/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
+          );
+
+           renderSponsors(
+            sponsorsByCategory.strategic,
+            'sponsors-strategic',
+            'bg-gradient-to-br from-blue-500/10 to-transparent border border-blue-400/30 rounded-xl p-4 hover:shadow-lg hover:shadow-blue-500/20 transition w-full max-w-sm min-h-[8rem] md:min-h-[10rem] flex items-center justify-center'
           );
 
           renderSponsors(
             sponsorsByCategory.community,
             'sponsors-community',
-            'bg-gradient-to-br from-cyan-400/5 to-transparent border border-gray-800 rounded-lg p-3 hover:shadow-lg hover:shadow-cyan-400/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
+            'bg-gradient-to-br from-cyan-400/5 to-transparent border border-gray-800 rounded-lg p-3 hover:shadow-lg hover:shadow-cyan-400/10 transition min-h-[1rem] md:min-h-[2rem] flex items-center justify-center'
           );
 
           renderSponsors(
             sponsorsByCategory.media,
             'sponsors-media',
-            'bg-gradient-to-br from-blue-400/5 to-transparent border border-gray-800 rounded-lg p-3 hover:shadow-lg hover:shadow-blue-400/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
+            'bg-gradient-to-br from-pink-500/5 to-transparent border border-gray-800 rounded-lg p-3 hover:shadow-lg hover:shadow-pink-500/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
           );
 
           renderSponsors(
             sponsorsByCategory.internet,
             'sponsors-internet',
-            'bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-900/50 rounded-lg p-3 hover:shadow-lg hover:shadow-blue-500/10 transition min-h-[6rem] md:min-h-[8rem] flex items-center justify-center'
+            'bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-900/50 rounded-lg p-3 hover:shadow-lg hover:shadow-blue-500/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
           );
 
           renderSponsors(
             sponsorsByCategory.printing,
             'sponsors-printing',
-            'bg-gradient-to-br from-orange-500/5 to-transparent border border-orange-900/50 rounded-lg p-3 hover:shadow-lg hover:shadow-orange-500/10 transition min-h-[6rem] md:min-h-[8rem] flex items-center justify-center'
+            'bg-gradient-to-br from-orange-500/5 to-transparent border border-orange-900/50 rounded-lg p-3 hover:shadow-lg hover:shadow-orange-500/10 transition min-h-[5rem] md:min-h-[6rem] flex items-center justify-center'
           );
 
         } catch (error) {
@@ -2742,7 +2899,7 @@
             <!-- Image Container -->
             <div id="modal-image-container" class="mb-6 hidden">
               <img id="modal-image" src="" alt="Announcement Attachment"
-                class="w-full h-auto rounded-xl border border-gray-700">
+                class="w-full h-auto rounded-xl border border-gray-700" loading="lazy">
             </div>
 
             <!-- PDF Container -->
@@ -2774,6 +2931,126 @@
       </div>
     </div>
   </div>
+  <!-- Registration Status Modal -->
+  <div id="reg-status-modal" class="fixed inset-0 z-[60] hidden" onclick="if(event.target === this) closeRegModal()">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div
+        class="relative bg-gray-900 border border-gray-800 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl glow-effect">
+        <!-- Close Button -->
+        <button onclick="closeRegModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition z-10">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+
+        <div class="p-8 text-center">
+          <!-- Logo -->
+          <div class="mb-6">
+            <img src="assets/logo.png" alt="Hackathon Nova Logo"
+              class="w-20 h-20 mx-auto rounded-xl shadow-lg border border-white/10">
+          </div>
+
+          <h2 id="reg-modal-title" class="text-3xl font-bold text-white mb-2">Registration Status</h2>
+
+          <!-- Timer Container -->
+          <div id="reg-timer-container" class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10 hidden">
+            <p id="reg-timer-label" class="text-xs uppercase tracking-widest text-gray-400 mb-2">Time Remaining</p>
+            <div id="reg-countdown" class="text-2xl font-mono font-bold text-orange-500">
+              00d 00h 00m 00s
+            </div>
+          </div>
+
+          <p id="reg-modal-text" class="text-gray-300 text-lg mb-8"></p>
+
+          <button onclick="closeRegModal()"
+            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all">
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let countdownInterval;
+
+    function closeRegModal() {
+      const modal = document.getElementById('reg-status-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      if (countdownInterval) clearInterval(countdownInterval);
+    }
+
+    function startCountdown(deadline) {
+      const timerContainer = document.getElementById('reg-timer-container');
+      const countdownElement = document.getElementById('reg-countdown');
+
+      timerContainer.classList.remove('hidden');
+
+      function update() {
+        const now = new Date().getTime();
+        const distance = deadline - now;
+
+        if (distance < 0) {
+          clearInterval(countdownInterval);
+          location.reload(); // Refresh to show "Closed" state
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownElement.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      update();
+      countdownInterval = setInterval(update, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Deadline: Jan 24, 00:00:00 (which means Jan 23 is the noon ma sakinxa)
+      const deadline = new Date('2026-01-23T12:00:00+05:45').getTime();
+      const now = new Date().getTime();
+      const isClosed = now >= deadline;
+
+      const modal = document.getElementById('reg-status-modal');
+      const modalTitle = document.getElementById('reg-modal-title');
+      const modalText = document.getElementById('reg-modal-text');
+
+      const timelineTitle = document.getElementById('timeline-reg-title');
+      const timelineStatus = document.getElementById('timeline-reg-status');
+      const timelineDesc = document.getElementById('timeline-reg-desc');
+
+      if (isClosed) {
+        // Update Modal
+        modalTitle.innerText = "Registration Closed";
+        modalText.innerText = "We're sorry, but registration for Hackathon Nova 2026 is now closed. Stay tuned for future events!";
+
+        // Update Timeline
+        if (timelineTitle) {
+          timelineTitle.innerText = "Registration Closed";
+          timelineTitle.classList.replace('text-green-500', 'text-red-500');
+        }
+        if (timelineStatus) {
+          timelineStatus.innerText = "Registration is closed";
+          timelineStatus.classList.replace('text-green-400', 'text-red-400');
+        }
+        if (timelineDesc) {
+          timelineDesc.innerText = "Follow us for more updates!";
+        }
+      } else {
+        // Update Modal
+        modalTitle.innerText = "Registration is Open!";
+        modalText.innerText = "Join Hackathon Nova 2026! Be quick, registration closes soon.";
+        startCountdown(deadline);
+      }
+
+      // Show modal on load
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    });
+  </script>
 </body>
 
 </html>

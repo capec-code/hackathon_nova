@@ -153,6 +153,54 @@
             </div>
         </div>
 
+        <!-- Secret Codes View -->
+        <div id="view-codes" class="view hidden">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2>Validator Secret Codes</h2>
+                    <button class="btn primary small" onclick="generateNewCode()" style="width:auto;">+ Generate Code</button>
+                </div>
+                <div class="table-container hidden sm:block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Assigned To</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="codes-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="codes-mobile-list" class="sm:hidden"></div>
+            </div>
+        </div>
+
+        <!-- Hackathon Goods View -->
+        <div id="view-goods" class="view hidden">
+            <div class="card">
+                <h2>Inventory Management</h2>
+                <div class="table-container hidden sm:block">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Est. Cost</th>
+                                <th style="text-align:right;">Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="goods-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="goods-mobile-list" class="sm:hidden"></div>
+            </div>
+        </div>
+
+
         <!-- VIEW QR Modal -->
         <div id="modal-view-qr" class="overlay hidden">
             <div class="login-box" style="text-align:center;">
