@@ -140,13 +140,22 @@ if ($action === 'upload') {
     // Catch everything and return as JSON
     ob_end_clean();
     header('Content-Type: application/json');
+    $error_msg = $e->getMessage();
     echo json_encode([
         "success" => false, 
-        "error" => $e->getMessage(),
-        "php_info" => [
-            "upload_max" => ini_get('upload_max_filesize'),
-            "post_max" => ini_get('post_max_size'),
-            "memory_limit" => ini_get('memory_limit')
+        "error" => $error_msg,
+        "errors" => [$error_msg], // Unify for consistency
+        "diagnostics" => [
+            "limit_info" => [
+                "upload_max" => ini_get('upload_max_filesize'),
+                "post_max" => ini_get('post_max_size'),
+                "memory" => ini_get('memory_limit')
+            ],
+            "request" => [
+                "method" => $_SERVER['REQUEST_METHOD'],
+                "files_sent" => count($_FILES['file']['name'] ?? []),
+                "action" => $_POST['action'] ?? 'none'
+            ]
         ]
     ]);
     exit;

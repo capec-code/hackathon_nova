@@ -126,7 +126,7 @@
             status.classList.remove('hidden');
             status.className = "mt-4 p-3 rounded-lg bg-orange-500/20 text-orange-400 block border border-orange-500/30";
 
-            const BATCH_SIZE = 10;
+            const BATCH_SIZE = 5; // Reduced from 10 to be safer
             const totalBatches = Math.ceil(files.length / BATCH_SIZE);
             let successCount = 0;
             let errorCount = 0;
@@ -139,7 +139,7 @@
                 status.innerText = `Uploading batch ${i + 1} of ${totalBatches}... (${end}/${files.length})`;
 
                 const formData = new FormData(e.target);
-                formData.delete('file[]'); // Clear any bound files
+                formData.delete('file[]'); 
                 batchFiles.forEach(file => formData.append('file[]', file));
 
                 try {
@@ -150,11 +150,12 @@
                         successCount += batchFiles.length;
                     } else {
                         errorCount += batchFiles.length;
-                        console.error("Batch error:", data.errors);
+                        const msg = data.error || (data.errors ? data.errors.join(', ') : 'Unknown server error');
+                        console.error(`Batch ${i+1} failed:`, msg, data);
                     }
                 } catch (err) {
                     errorCount += batchFiles.length;
-                    console.error("Fetch error:", err);
+                    console.error(`Batch ${i+1} fetch error:`, err);
                 }
             }
 
