@@ -2949,9 +2949,9 @@
               class="w-20 h-20 mx-auto rounded-xl shadow-lg border border-white/10">
           </div>
 
-          <h2 id="reg-modal-title" class="text-3xl font-bold text-white mb-2">Registration Status</h2>
+          <h2 id="reg-modal-title" class="text-3xl font-bold text-white mb-2">GitHub Repository Registration</h2>
 
-          <!-- Timer Container -->
+          <!-- Timer Container (Hidden for GitHub Registration) -->
           <div id="reg-timer-container" class="mb-6 p-4 bg-white/5 rounded-xl border border-white/10 hidden">
             <p id="reg-timer-label" class="text-xs uppercase tracking-widest text-gray-400 mb-2">Time Remaining</p>
             <div id="reg-countdown" class="text-2xl font-mono font-bold text-orange-500">
@@ -2959,12 +2959,14 @@
             </div>
           </div>
 
-          <p id="reg-modal-text" class="text-gray-300 text-lg mb-8"></p>
+          <p id="reg-modal-text" class="text-gray-300 text-lg mb-8">
+            To ensure a seamless experience and proper coordination for Hackathon Nova 2026, we kindly request all participating teams to register their GitHub repositories. Please take a moment to provide your repository details through the official link below. Your cooperation is greatly appreciated as we prepare for an incredible event.
+          </p>
 
-          <button onclick="closeRegModal()"
-            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all">
-            Got it!
-          </button>
+          <a href="https://forms.gle/4997Eqz6dHqTfYbB7" target="_blank"
+            class="block w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all text-center">
+            Complete Registration Form
+          </a>
         </div>
       </div>
     </div>
@@ -3009,25 +3011,19 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Deadline: Jan 24, 00:00:00 (which means Jan 23 is the noon ma sakinxa)
+      const modal = document.getElementById('reg-status-modal');
+      
+      // Update Timeline status if needed
       const deadline = new Date('2026-01-23T12:00:00+05:45').getTime();
       const now = new Date().getTime();
       const isClosed = now >= deadline;
-
-      const modal = document.getElementById('reg-status-modal');
-      const modalTitle = document.getElementById('reg-modal-title');
-      const modalText = document.getElementById('reg-modal-text');
 
       const timelineTitle = document.getElementById('timeline-reg-title');
       const timelineStatus = document.getElementById('timeline-reg-status');
       const timelineDesc = document.getElementById('timeline-reg-desc');
 
       if (isClosed) {
-        // Update Modal
-        modalTitle.innerText = "Registration Closed";
-        modalText.innerText = "We're sorry, but registration for Hackathon Nova 2026 is now closed. Stay tuned for future events!";
-
-        // Update Timeline
+        // Update Timeline to closed
         if (timelineTitle) {
           timelineTitle.innerText = "Registration Closed";
           timelineTitle.classList.replace('text-green-500', 'text-red-500');
@@ -3039,14 +3035,9 @@
         if (timelineDesc) {
           timelineDesc.innerText = "Follow us for more updates!";
         }
-      } else {
-        // Update Modal
-        modalTitle.innerText = "Registration is Open!";
-        modalText.innerText = "Join Hackathon Nova 2026! Be quick, registration closes soon.";
-        startCountdown(deadline);
       }
 
-      // Show modal on load
+      // Show popup on load
       modal.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     });
