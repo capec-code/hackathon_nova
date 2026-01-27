@@ -31,6 +31,7 @@
       grid-template-columns: repeat(6, 1fr);
       gap: 0.75rem;
       grid-auto-rows: 9rem;
+      grid-auto-flow: dense;
     }
 
     .bento-item {
@@ -145,7 +146,15 @@
         <p class="text-white text-lg">Gallery of highlights from Hackathon Nova 2026</p>
       </div>
 
-      <div class="bento mb-12" data-source="/assets/gallery.json"></div>
+      <div class="mb-12">
+        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-6 pl-4 border-l-4 border-cyan-500">Day 1</h2>
+        <div class="bento" data-source="/assets/gallery.json" data-day="1"></div>
+      </div>
+
+      <div class="mb-12">
+        <h2 class="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent mb-6 pl-4 border-l-4 border-orange-500">Day 2</h2>
+        <div class="bento" data-source="/assets/gallery.json" data-day="2"></div>
+      </div>
 
 
     </div>

@@ -70,6 +70,15 @@
       container.appendChild(icon);
       div.appendChild(container);
     }
+    // Watermark
+    const watermark = document.createElement('div');
+    watermark.className = 'absolute bottom-2 right-2 font-mono text-orange-500 font-bold text-xs sm:text-sm tracking-wider z-10 pointer-events-none bg-black/80 px-3 py-1 rounded border border-orange-500/30 shadow-[0_0_10px_rgba(255,107,53,0.3)]';
+    watermark.innerHTML = '&lt; Hackathon Nova 2026 /&gt;';
+    
+    // Ensure relative positioning for absolute child
+    div.classList.add('relative');
+    div.appendChild(watermark);
+
     return div;
   }
 
@@ -116,31 +125,45 @@
     // Fade in effect for content
     const wrapper = document.createElement('div');
     wrapper.className = 'w-full h-full flex items-center justify-center animate-fade-in'; 
-    // Note: animate-fade-in needs to be defined in CSS or utility, assuming simple opacity transition works
+    
+    // Container to shrink-wrap the media so watermark stays on the image
+    const mediaContainer = document.createElement('div');
+    mediaContainer.className = 'relative inline-block max-w-full max-h-[85vh]';
 
     if(item.type === 'image'){
         const img = document.createElement('img');
         img.src = item.src;
         img.alt = item.alt || '';
-        img.className = 'max-w-full max-h-[85vh] object-contain shadow-2xl rounded-lg';
-        wrapper.appendChild(img);
+        img.className = 'max-w-full max-h-[85vh] object-contain shadow-2xl rounded-lg block';
+        mediaContainer.appendChild(img);
     } else if(item.type === 'video'){
         const video = document.createElement('video');
         video.src = item.src;
         video.controls = true;
         video.autoplay = true;
         video.muted = true;
-        video.className = 'max-w-full max-h-[85vh] shadow-2xl rounded-lg bg-black';
-        wrapper.appendChild(video);
+        video.className = 'max-w-full max-h-[85vh] shadow-2xl rounded-lg bg-black block';
+        mediaContainer.appendChild(video);
     } else if(item.type === 'youtube'){
         const id = extractYouTubeID(item.src);
         const iframe = document.createElement('iframe');
         iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
         iframe.allowFullscreen = true;
-        iframe.className = 'w-full max-w-4xl aspect-video shadow-2xl rounded-lg border border-gray-800';
-        wrapper.appendChild(iframe);
+        iframe.className = 'w-full max-w-4xl aspect-video shadow-2xl rounded-lg border border-gray-800 block';
+        mediaContainer.appendChild(iframe);
     }
+
+    // -- Lightbox Watermark --
+    // Only for image/video types where we want the overlay
+    if(item.type !== 'youtube'){ 
+        const lbWatermark = document.createElement('div');
+        lbWatermark.className = 'absolute bottom-4 right-4 font-mono text-orange-500 font-bold text-sm sm:text-lg tracking-wider z-20 pointer-events-none bg-black/80 px-4 py-2 rounded-lg border border-orange-500/30 shadow-[0_0_15px_rgba(255,107,53,0.4)]';
+        lbWatermark.innerHTML = '&lt; Hackathon Nova 2026 /&gt;';
+        mediaContainer.appendChild(lbWatermark);
+    }
+
+    wrapper.appendChild(mediaContainer);
     lbContent.appendChild(wrapper);
   }
 
@@ -157,28 +180,103 @@
     btn.disabled = true;
 
     try {
-        // Try to fetch as blob for direct download
-        const response = await fetch(item.src);
-        if(!response.ok) throw new Error('Network response was not ok');
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.href = url;
-        // Extract filename or default
-        const parts = item.src.split('/');
-        let filename = parts[parts.length-1].split('?')[0] || 'gallery-item';
-        if(item.type === 'image' && !filename.includes('.')) filename += '.jpg';
-        if(item.type === 'video' && !filename.includes('.')) filename += '.mp4';
-        
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        if (item.type === 'image') {
+            // -- Image Watermarking Logic (Canvas) --
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = item.src;
+
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+            });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+
+            // Draw original image
+            ctx.drawImage(img, 0, 0);
+
+            // -- Draw Funky Watermark --
+            // Responsive sizing: ~2% of image width (Reduced from 4%)
+            const fontSize = Math.max(16, Math.floor(img.width * 0.02)); 
+            const padding = Math.floor(img.width * 0.02);
+
+            // Background Box
+            const text = '< Hackathon Nova 2026 />';
+            ctx.font = `bold ${fontSize}px "Courier New", monospace`;
+            const textMetrics = ctx.measureText(text);
+            const textWidth = textMetrics.width;
+            const boxHeight = fontSize * 1.5; // Tighter box
+            const boxPadding = fontSize * 0.4;
+            
+            const x = img.width - padding - textWidth - (boxPadding * 2);
+            const y = img.height - padding - boxHeight;
+
+            // Semi-transparent black bg
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'; 
+            // Rounded rect hack (standard rect for simplicity)
+            ctx.fillRect(x, y, textWidth + (boxPadding * 2), boxHeight);
+            
+            // Border (Orange)
+            ctx.strokeStyle = 'rgba(255, 107, 53, 0.5)';
+            ctx.lineWidth = Math.max(2, fontSize * 0.05);
+            ctx.strokeRect(x, y, textWidth + (boxPadding * 2), boxHeight);
+
+            // Text (Brand Orange)
+            ctx.fillStyle = '#FF6B35'; 
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            
+            // Glow effect
+            ctx.shadowColor = '#FF6B35';
+            ctx.shadowBlur = 10;
+            
+            // Slight Y adjustment for visual centering if font has odd baseline
+            ctx.fillText(text, x + boxPadding, y + (boxHeight / 2) + (fontSize * 0.05));
+
+             // Reset shadow
+             ctx.shadowBlur = 0;
+
+            // Export and Download
+            canvas.toBlob((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                
+                const parts = item.src.split('/');
+                let filename = parts[parts.length-1].split('?')[0] || 'hackathon-nova-gallery';
+                if(!filename.toLowerCase().endsWith('.jpg') && !filename.toLowerCase().endsWith('.png')) filename += '.jpg';
+                
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 'image/jpeg', 0.95);
+
+        } else {
+             // -- Original Logic for Videos --
+            const response = await fetch(item.src);
+            if(!response.ok) throw new Error('Network response was not ok');
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            const parts = item.src.split('/');
+            let filename = parts[parts.length-1].split('?')[0] || 'gallery-video.mp4';
+            
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
     } catch (err) {
         console.error('Download failed, falling back to new tab:', err);
-        // Fallback: Open in new tab
         window.open(item.src, '_blank');
     } finally {
         btn.innerHTML = originalContent;
@@ -228,8 +326,9 @@
   // --- Initialization ---
 
   async function render(){
-    const defaultSrc = '/assets/gallery.json';
-    // We assume the first bento grid defines the main source for the lightbox
+    const defaultSrc = '/cpanel_migration/get_gallery.php'; // Updated to PHP API
+    // Fallback or development
+    // const defaultSrc = '/assets/gallery.json';
     // Ideally we merge all sources or handle multiple grids. 
     // For this specific setup, we'll just fetch once.
     
@@ -245,11 +344,21 @@
     grids.forEach(container => {
         // We reuse galleryItems but respect the limit per container
         const limit = parseInt(container.dataset.limit) || galleryItems.length;
-        const itemsToRender = galleryItems.slice(0, limit);
+        const day = parseInt(container.dataset.day); // Get the day from data attribute
+
+        // Filter items based on day if specified
+        let itemsToRender = galleryItems;
+        if (day) {
+            itemsToRender = itemsToRender.filter(item => item.day === day);
+        }
+
+        itemsToRender = itemsToRender.slice(0, limit);
         
         container.innerHTML = '';
         itemsToRender.forEach((item, idx) => {
-            const node = makeItemNode(item, idx);
+            // Calculate global index for lightbox
+             const originalIndex = galleryItems.indexOf(item);
+             const node = makeItemNode(item, originalIndex);
             container.appendChild(node);
         });
     });
