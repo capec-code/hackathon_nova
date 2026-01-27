@@ -32,7 +32,7 @@ if ($action === 'upload') {
         $name = is_array($files['name']) ? $files['name'][$i] : $files['name'];
         $tmp_name = is_array($files['tmp_name']) ? $files['tmp_name'][$i] : $files['tmp_name'];
         
-        $target_dir = "../assets/gallery/";
+        $target_dir = "../../assets/gallery/";
         $target_file = $target_dir . basename($name);
         $db_path = "/assets/gallery/" . basename($name);
 

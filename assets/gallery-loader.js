@@ -326,7 +326,7 @@
   // --- Initialization ---
 
   async function render(){
-    const defaultSrc = '/cpanel_migration/get_gallery.php'; // Updated to PHP API
+    const defaultSrc = '/volunteer-qr-portal/cpanel_migration/get_gallery.php'; // Updated path
     // Fallback or development
     // const defaultSrc = '/assets/gallery.json';
     // Ideally we merge all sources or handle multiple grids. 
