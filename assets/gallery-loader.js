@@ -14,6 +14,25 @@
     }catch(e){ console.error(e); return []; }
   }
 
+  function createSkeletonNode(span = '1x1') {
+    const div = document.createElement('div');
+    div.className = `bento-item skeleton ${span === '2x2' ? 'span-2x2' : 'span-1x1'}`;
+    return div;
+  }
+
+  function preFillSkeletons() {
+    const grids = document.querySelectorAll('.bento');
+    grids.forEach(grid => {
+        grid.innerHTML = '';
+        // Add 8 skeletons per grid for initial visual feedback
+        for(let i=0; i<8; i++) {
+            // Mix spans for skeleton variety
+            const span = i % 5 === 0 ? '2x2' : (i % 3 === 0 ? '2x1' : '1x1');
+            grid.appendChild(createSkeletonNode(span));
+        }
+    });
+  }
+
   function extractYouTubeID(url){
     if(!url) return url;
     const reg = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
@@ -23,7 +42,15 @@
 
   function makeItemNode(item, index){
     const div = document.createElement('div');
-    div.className = 'bento-item ' + (item.span === '2x2' ? 'span-2x2' : 'span-1x1');
+    div.className = 'bento-item skeleton ' + (item.span === '2x2' ? 'span-2x2' : 'span-1x1');
+
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'w-full h-full fade-in';
+
+    const reveal = () => {
+        div.classList.remove('skeleton');
+        contentWrapper.classList.add('loaded');
+    };
 
     if(item.type === 'image'){
       const img = document.createElement('img');
@@ -31,9 +58,9 @@
       img.alt = item.alt || '';
       img.loading = 'lazy';
       img.style.cursor = 'zoom-in';
-        // Open Lightbox on click
+      img.onload = reveal;
       img.addEventListener('click', () => openLightbox(index));
-      div.appendChild(img);
+      contentWrapper.appendChild(img);
     } else if(item.type === 'video'){
       const video = document.createElement('video');
       video.src = item.src;
@@ -44,12 +71,12 @@
       video.preload = 'metadata';
       if(item.poster) video.poster = item.poster;
       video.style.cursor = 'zoom-in';
+      video.onloadeddata = reveal;
       video.addEventListener('click', () => openLightbox(index));
-      div.appendChild(video);
+      contentWrapper.appendChild(video);
     } else if(item.type === 'youtube'){
-      // For YouTube thumbnails in grid
+      // YouTube thumbnails load fast, but we'll still use the logic
       const id = extractYouTubeID(item.src);
-      // Use a high-quality thumbnail as a placeholder
       const thumbUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
       
       const container = document.createElement('div');
@@ -60,22 +87,24 @@
       img.src = thumbUrl;
       img.alt = item.alt || 'YouTube video';
       img.className = 'w-full h-full object-cover';
+      img.onload = reveal;
       
-      // Play icon overlay
       const icon = document.createElement('div');
       icon.className = 'absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition';
       icon.innerHTML = '<i class="fas fa-play-circle text-white text-5xl opacity-80 group-hover:scale-110 transition-transform"></i>';
 
       container.appendChild(img);
       container.appendChild(icon);
-      div.appendChild(container);
+      contentWrapper.appendChild(container);
     }
+    
+    div.appendChild(contentWrapper);
+
     // Watermark
     const watermark = document.createElement('div');
-    watermark.className = 'absolute bottom-2 right-2 font-mono text-orange-500 font-bold text-xs sm:text-sm tracking-wider z-10 pointer-events-none bg-black/80 px-3 py-1 rounded border border-orange-500/30 shadow-[0_0_10px_rgba(255,107,53,0.3)]';
-    watermark.innerHTML = '&lt; Hackathon Nova 2026 /&gt;';
+    watermark.className = 'absolute bottom-2 right-2 font-mono text-orange-500 font-bold text-[10px] sm:text-xs tracking-wider z-10 pointer-events-none bg-black/80 px-2 py-0.5 rounded border border-orange-500/30 shadow-[0_0_10px_rgba(255,107,53,0.3)]';
+    watermark.innerHTML = '&lt; Nova /&gt;'; // Shorter for grid
     
-    // Ensure relative positioning for absolute child
     div.classList.add('relative');
     div.appendChild(watermark);
 
@@ -435,5 +464,8 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', render);
+  document.addEventListener('DOMContentLoaded', () => {
+    preFillSkeletons();
+    render();
+  });
 })();

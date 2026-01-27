@@ -82,6 +82,27 @@
       height: auto;
       display: block;
     }
+
+    /* Skeleton Loading */
+    .skeleton {
+      background: linear-gradient(90deg, #0b1220 25%, #161f31 50%, #0b1220 75%);
+      background-size: 200% 100%;
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes skeleton-pulse {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .fade-in.loaded {
+      opacity: 1;
+    }
   </style>
 </head>
 
