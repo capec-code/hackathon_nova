@@ -46,9 +46,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Nav
     document.querySelectorAll('.nav-item').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.preventDefault();
             const view = btn.dataset.view;
-            showView(view);
+            if (view) {
+                e.preventDefault();
+                showView(view);
+            }
+            // If no data-view, let the browser handle the href normally
         });
     });
 });
