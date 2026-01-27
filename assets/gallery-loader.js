@@ -326,8 +326,9 @@
   // --- Initialization ---
 
   async function render(){
-    const defaultSrc = '/assets/gallery.json';
-    // We assume the first bento grid defines the main source for the lightbox
+    const defaultSrc = '/cpanel_migration/get_gallery.php'; // Updated to PHP API
+    // Fallback or development
+    // const defaultSrc = '/assets/gallery.json';
     // Ideally we merge all sources or handle multiple grids. 
     // For this specific setup, we'll just fetch once.
     
