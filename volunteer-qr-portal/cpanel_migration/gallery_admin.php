@@ -72,6 +72,7 @@
 
     <script>
         const API_KEY = "nova_admin_2026";
+        const MAIN_SITE_URL = "https://hackathon-nova.com"; // Adjust if different
 
         function updateFileList(input) {
             const label = document.getElementById('file-label');
@@ -116,11 +117,13 @@
                 const res = await fetch('get_gallery.php');
                 const items = await res.json();
                 
-                list.innerHTML = items.reverse().map(item => `
+                list.innerHTML = items.reverse().map(item => {
+                    const fullSrc = item.src.startsWith('http') ? item.src : MAIN_SITE_URL + item.src;
+                    return `
                     <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg border border-gray-700">
                         <div class="flex items-center gap-3 overflow-hidden">
                             <div class="w-12 h-12 rounded bg-gray-800 flex-shrink-0">
-                                ${item.type === 'image' ? `<img src="${item.src}" class="w-full h-full object-cover rounded">` : '<div class="w-full h-full flex items-center justify-center">📹</div>'}
+                                ${item.type === 'image' ? `<img src="${fullSrc}" class="w-full h-full object-cover rounded">` : '<div class="w-full h-full flex items-center justify-center">📹</div>'}
                             </div>
                             <div class="truncate">
                                 <p class="text-sm font-medium truncate">${item.src.split('/').pop()}</p>
@@ -129,7 +132,7 @@
                         </div>
                         <button onclick="deleteItem(${item.id})" class="text-red-500 hover:bg-red-500/10 p-2 rounded transition">🗑️</button>
                     </div>
-                `).join('');
+                `;}).join('');
                 
                 if(items.length === 0) list.innerHTML = '<p class="text-gray-500 text-center py-8">No items in gallery.</p>';
             } catch (err) {
