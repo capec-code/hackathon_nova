@@ -3,7 +3,7 @@
 
 $servername = "localhost";
 $username = "hackathonnova_sajan";
-$password = "\$arthak1701"; // Escaped $ for PHP string
+$password = "Sajan123@"; // Escaped $ for PHP string
 $dbname = "hackathonnova_gallary";
 
 // Create connection

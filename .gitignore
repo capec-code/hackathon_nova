@@ -44,3 +44,7 @@ Thumbs.db
 
 # Optional: Supabase Config (Uncomment if you want to keep your keys private)
 assets/js/supabase-config.js
+
+# Gallery media (Large files - upload manually to cPanel)
+assets/gallery/
+
