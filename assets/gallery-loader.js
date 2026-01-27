@@ -324,46 +324,82 @@
   }
 
   // --- Initialization ---
+  let allGalleryItems = [];
 
   async function render(){
     const defaultSrc = '/volunteer-qr-portal/cpanel_migration/get_gallery.php'; // Updated path
-    // Fallback or development
-    // const defaultSrc = '/assets/gallery.json';
-    // Ideally we merge all sources or handle multiple grids. 
-    // For this specific setup, we'll just fetch once.
     
     const grids = document.querySelectorAll('.bento');
     if(grids.length === 0) return;
 
     // Fetch data from the first grid's source
     const src = grids[0].dataset.source || defaultSrc;
-    galleryItems = await fetchGallery(src);
+    allGalleryItems = await fetchGallery(src);
+    galleryItems = [...allGalleryItems]; // Default set
     
-    if(!Array.isArray(galleryItems)) return;
+    if(!Array.isArray(allGalleryItems)) return;
 
+    populateGrids();
+    setupSearch();
+    initLightboxUI();
+  }
+
+  function populateGrids() {
+    const grids = document.querySelectorAll('[data-day]'); // Only the specific day containers
     grids.forEach(container => {
-        // We reuse galleryItems but respect the limit per container
-        const limit = parseInt(container.dataset.limit) || galleryItems.length;
-        const day = parseInt(container.dataset.day); // Get the day from data attribute
+        const limit = parseInt(container.dataset.limit) || allGalleryItems.length;
+        const day = parseInt(container.dataset.day);
 
-        // Filter items based on day if specified
-        let itemsToRender = galleryItems;
-        if (day) {
-            itemsToRender = itemsToRender.filter(item => item.day === day);
-        }
-
-        itemsToRender = itemsToRender.slice(0, limit);
+        let itemsToRender = allGalleryItems.filter(item => item.day === day).slice(0, limit);
         
         container.innerHTML = '';
-        itemsToRender.forEach((item, idx) => {
-            // Calculate global index for lightbox
+        itemsToRender.forEach((item) => {
+             // Find true index in the current global galleryItems for Lightbox
              const originalIndex = galleryItems.indexOf(item);
              const node = makeItemNode(item, originalIndex);
             container.appendChild(node);
         });
     });
+  }
 
-    initLightboxUI();
+  function setupSearch() {
+    const searchInput = document.getElementById('gallery-search');
+    const searchView = document.getElementById('search-view');
+    const dayViews = document.getElementById('day-views');
+    const resultsContainer = document.getElementById('search-results-bento');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        
+        if (query.length >= 1) {
+            searchView.classList.remove('hidden');
+            dayViews.classList.add('hidden');
+            
+            const filtered = allGalleryItems.filter(item => 
+                item.src.toLowerCase().includes(query) || 
+                (item.alt && item.alt.toLowerCase().includes(query))
+            );
+            
+            // Critical for lightbox: update the reference array
+            galleryItems = filtered;
+            
+            resultsContainer.innerHTML = '';
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 font-mono italic">No matching media found in database.</div>';
+            } else {
+                filtered.forEach((item, idx) => {
+                    const node = makeItemNode(item, idx);
+                    resultsContainer.appendChild(node);
+                });
+            }
+        } else {
+            searchView.classList.add('hidden');
+            dayViews.classList.remove('hidden');
+            galleryItems = [...allGalleryItems]; // Restore for standard lightbox
+        }
+    });
   }
 
   function initLightboxUI(){
