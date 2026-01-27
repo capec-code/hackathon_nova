@@ -1,13 +1,21 @@
 <?php
 // cpanel_migration/upload_handler.php
-header('Content-Type: application/json');
+// Enable output buffering to prevent headers/whitespace leakage
+ob_start();
+
 require_once 'db_connect.php';
 
 // Simple API Key security
 $SECRET_KEY = "nova_admin_2026";
-if ($_POST['api_key'] !== $SECRET_KEY) {
+$api_key = $_POST['api_key'] ?? '';
+
+if ($api_key !== $SECRET_KEY) {
+    ob_end_clean();
     die(json_encode(["success" => false, "error" => "Unauthorized"]));
 }
+
+try {
+
 
 $action = $_POST['action'] ?? 'upload';
 
@@ -124,6 +132,34 @@ if ($action === 'upload') {
     } else {
         echo json_encode(["success" => false, "error" => $conn->error]);
     }
+} else {
+    throw new Error("Invalid action provided.");
+}
+
+} catch (Throwable $e) {
+    // Catch everything and return as JSON
+    ob_end_clean();
+    header('Content-Type: application/json');
+    echo json_encode([
+        "success" => false, 
+        "error" => $e->getMessage(),
+        "php_info" => [
+            "upload_max" => ini_get('upload_max_filesize'),
+            "post_max" => ini_get('post_max_size'),
+            "memory_limit" => ini_get('memory_limit')
+        ]
+    ]);
+    exit;
+}
+
+// Final output
+$final_output = ob_get_clean();
+header('Content-Type: application/json');
+if (empty($final_output)) {
+    // This shouldn't happen if logic above echoed something
+    echo json_encode(["success" => false, "error" => "No response generated"]);
+} else {
+    echo $final_output;
 }
 
 $conn->close();
