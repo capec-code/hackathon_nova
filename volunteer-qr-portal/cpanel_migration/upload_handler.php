@@ -40,14 +40,27 @@ if ($action === 'upload') {
         $name = is_array($files['name']) ? $files['name'][$i] : $files['name'];
         $tmp_name = is_array($files['tmp_name']) ? $files['tmp_name'][$i] : $files['tmp_name'];
         
-        $target_dir = "../../assets/gallery/";
-        $target_file = $target_dir . basename($name);
-        $db_path = "/assets/gallery/" . basename($name);
+        // Use absolute paths to guarantee correct directory targeting
+        $target_dir = dirname(dirname(__DIR__)) . "/assets/gallery/";
+        $filename = basename($name);
+        $target_file = $target_dir . $filename;
+        $db_path = "/assets/gallery/" . $filename;
+
+        // Auto-detect type based on extension
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $video_exts = ['mp4', 'mov', 'avi', 'webm', 'm4v'];
+        $detected_type = in_array($ext, $video_exts) ? 'video' : 'image';
 
         if (move_uploaded_file($tmp_name, $target_file)) {
+            // Verify file actually exists on disk after move
+            if (!file_exists($target_file)) {
+                $errors[] = "Post-move verification failed for $name (Not found on disk)";
+                continue;
+            }
+
             // DB Insert
             $stmt = $conn->prepare("INSERT INTO gallery_items (type, src, alt, span, day) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssi", $type, $db_path, $alt, $span, $day);
+            $stmt->bind_param("ssssi", $detected_type, $db_path, $alt, $span, $day);
             
             if ($stmt->execute()) {
                 $uploaded_files[] = $name;
@@ -56,14 +69,19 @@ if ($action === 'upload') {
             }
             $stmt->close();
         } else {
-            $errors[] = "Failed to move $name";
+            $errors[] = "Failed to move $name. Check permissions or PHP tmp limits.";
         }
     }
 
     echo json_encode([
         "success" => empty($errors),
         "uploaded" => $uploaded_files,
-        "errors" => $errors
+        "errors" => $errors,
+        "diagnostics" => [
+            "target_dir" => $target_dir,
+            "exists" => is_dir($target_dir),
+            "writable" => is_writable($target_dir)
+        ]
     ]);
 
 } elseif ($action === 'delete') {
