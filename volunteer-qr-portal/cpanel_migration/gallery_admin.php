@@ -141,8 +141,14 @@
                 const formData = new FormData(e.target);
                 formData.delete('file[]'); 
                 batchFiles.forEach(file => formData.append('file[]', file));
+                
+                // Explicitly set API key to ensure it survives any form resets or state issues
+                formData.set('api_key', API_KEY);
 
                 try {
+                    // Small delay to let the server breathe
+                    if (totalBatches > 1) await new Promise(r => setTimeout(r, 200));
+
                     const res = await fetch('upload_handler.php', { method: 'POST', body: formData });
                     const data = await res.json();
                     

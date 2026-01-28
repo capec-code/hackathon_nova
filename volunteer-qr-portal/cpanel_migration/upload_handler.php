@@ -5,13 +5,31 @@ ob_start();
 
 require_once 'db_connect.php';
 
-// Simple API Key security
+// 1. Check for POST Size Overflow (Common cause of dropped API keys)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+    ob_end_clean();
+    header('Content-Type: application/json');
+    die(json_encode([
+        "success" => false, 
+        "error" => "Total upload size exceeds server limits (post_max_size: " . ini_get('post_max_size') . ")",
+        "code" => "POST_LIMIT_EXCEEDED"
+    ]));
+}
+
+// 2. Simple API Key security
 $SECRET_KEY = "nova_admin_2026";
 $api_key = $_POST['api_key'] ?? '';
 
+if (empty($api_key)) {
+    ob_end_clean();
+    header('Content-Type: application/json');
+    die(json_encode(["success" => false, "error" => "Authentication required (Missing Key)", "code" => "MISSING_KEY"]));
+}
+
 if ($api_key !== $SECRET_KEY) {
     ob_end_clean();
-    die(json_encode(["success" => false, "error" => "Unauthorized"]));
+    header('Content-Type: application/json');
+    die(json_encode(["success" => false, "error" => "Authentication failed (Invalid Key)", "code" => "INVALID_KEY"]));
 }
 
 try {
