@@ -9,7 +9,8 @@
    ========================================= */
 const CONFIG = {
     EVENT_LABEL: "HACKATHON NOVA",
-    HACKATHON_DURATION_MS: 60 * 60 * 60 * 1000, // 60 Hours
+    HACKATHON_DURATION_MS: 0, // Deprecated in favor of fixed end time
+    HACKATHON_END_TIME: new Date("2026-01-29T09:00:00+05:45").getTime(), // Today morning 9
     TEST_DURATION_MS: 15000, // 15 Seconds for First Screen logic
     STORAGE_KEY_END: "hackathon_nova_end_time",
     STORAGE_KEY_STATE: "hackathon_nova_state", // PREP | RUNNING | PAUSED | ENDED
@@ -140,7 +141,11 @@ function checkSession() {
     if (savedState && savedEnd && savedState !== 'PREP') {
         console.log("Pro Recovery: Active session detected.");
         if (savedState === 'RUNNING') {
-            // Auto-resume for running sessions
+            // Force update end time if it's different from the new fixed end time
+            if (parseInt(savedEnd) !== CONFIG.HACKATHON_END_TIME) {
+                console.log("Syncing session end time to 9:00 AM today.");
+                localStorage.setItem(CONFIG.STORAGE_KEY_END, CONFIG.HACKATHON_END_TIME);
+            }
             manualResume(true);
         } else {
             // Show resume button for paused/other states
@@ -364,7 +369,7 @@ async function triggerSequence() {
     if (UI.liveBadge) UI.liveBadge.classList.remove('hidden');
     
     // --- START TIMER LOGIC ---
-    const endTime = Date.now() + CONFIG.HACKATHON_DURATION_MS;
+    const endTime = CONFIG.HACKATHON_END_TIME;
     CONFIG.TARGET_DATE = endTime;
     localStorage.setItem(CONFIG.STORAGE_KEY_END, endTime);
     setConfigState('RUNNING'); // Auto-saves state
