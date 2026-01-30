@@ -168,6 +168,80 @@ if ($action === 'upload') {
     } else {
         echo json_encode(["success" => false, "error" => $conn->error]);
     }
+} elseif ($action === 'toggle_featured') {
+    $id = (int)$_POST['id'];
+    $val = (int)$_POST['is_featured'];
+    $stmt = $conn->prepare("UPDATE gallery_items SET is_featured = ? WHERE id = ?");
+    $stmt->bind_param("ii", $val, $id);
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true]);
+    } else {
+        echo json_encode(["success" => false, "error" => $conn->error]);
+    }
+    $stmt->close();
+} elseif ($action === 'toggle_featured_bulk') {
+    $ids = $_POST['ids'] ?? [];
+    $val = (int)$_POST['is_featured'];
+    if (empty($ids)) die(json_encode(["success" => false, "error" => "No items selected"]));
+    $id_list = implode(',', array_map('intval', $ids));
+    if ($conn->query("UPDATE gallery_items SET is_featured = $val WHERE id IN ($id_list)")) {
+        echo json_encode(["success" => true, "count" => $conn->affected_rows]);
+    } else {
+        echo json_encode(["success" => false, "error" => $conn->error]);
+    }
+} elseif ($action === 'cleanup_duplicates') {
+    // 1. Handle same-path duplicates (DB cleanup)
+    $sql = "SELECT src, COUNT(*) as count, MIN(id) as keep_id FROM gallery_items GROUP BY src HAVING count > 1";
+    $result = $conn->query($sql);
+    $removed_path_dupes = 0;
+    while ($result && $row = $result->fetch_assoc()) {
+        $src = $conn->real_escape_string($row['src']);
+        $keep_id = (int)$row['keep_id'];
+        $conn->query("DELETE FROM gallery_items WHERE src = '$src' AND id != $keep_id");
+        $removed_path_dupes += ($row['count'] - 1);
+    }
+
+    // 2. Handle content-based duplicates (MD5)
+    $sql = "SELECT id, src FROM gallery_items";
+    $result = $conn->query($sql);
+    $hashes = [];
+    $to_delete_ids = [];
+    $to_delete_files = [];
+    
+    while ($result && $row = $result->fetch_assoc()) {
+        $file_path = "../../" . ltrim($row['src'], '/');
+        if (!file_exists($file_path)) continue;
+
+        $hash = md5_file($file_path);
+        if (isset($hashes[$hash])) {
+            $to_delete_ids[] = (int)$row['id'];
+            // If it's a different file path, delete the physical file
+            if ($row['src'] !== $hashes[$hash]) {
+                $to_delete_files[] = $file_path;
+            }
+        } else {
+            $hashes[$hash] = $row['src'];
+        }
+    }
+
+    $removed_content_dupes = 0;
+    if (!empty($to_delete_ids)) {
+        $id_list = implode(',', $to_delete_ids);
+        $conn->query("DELETE FROM gallery_items WHERE id IN ($id_list)");
+        $removed_content_dupes = count($to_delete_ids);
+    }
+
+    foreach ($to_delete_files as $f) {
+        if (file_exists($f)) unlink($f);
+    }
+
+    echo json_encode([
+        "success" => true,
+        "removed_path_dupes" => $removed_path_dupes,
+        "removed_content_dupes" => $removed_content_dupes,
+        "total_removed" => $removed_path_dupes + $removed_content_dupes,
+        "message" => "Cleanup complete: removed " . ($removed_path_dupes + $removed_content_dupes) . " duplicates."
+    ]);
 } else {
     throw new Error("Invalid action provided.");
 }

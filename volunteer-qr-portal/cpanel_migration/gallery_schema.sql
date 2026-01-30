@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `gallery_items` (
   `alt` text,
   `span` varchar(20) DEFAULT '1x1',
   `day` int(11) DEFAULT 1,
+  `is_featured` tinyint(1) DEFAULT 0,
   `poster` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

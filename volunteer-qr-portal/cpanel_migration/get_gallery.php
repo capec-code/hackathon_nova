@@ -14,6 +14,7 @@ if ($result && $result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         // Convert numeric strings to numbers if needed (e.g. day)
         $row['day'] = (int)$row['day'];
+        $row['is_featured'] = isset($row['is_featured']) ? (bool)$row['is_featured'] : false;
         
         // Remove null fields to keep JSON clean (optional)
         if (is_null($row['poster'])) {

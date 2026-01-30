@@ -403,21 +403,40 @@
   }
 
   function populateGrids() {
-    const grids = document.querySelectorAll('[data-day]'); // Only the specific day containers
+    const featuredSection = document.getElementById('featured-view');
+    const grids = document.querySelectorAll('.bento'); 
+    
+    let featuredItemCount = 0;
+
     grids.forEach(container => {
-        const limit = parseInt(container.dataset.limit) || allGalleryItems.length;
+        const isFeatured = container.dataset.featured === 'true';
         const day = parseInt(container.dataset.day);
 
-        let itemsToRender = allGalleryItems.filter(item => item.day === day).slice(0, limit);
+        let itemsToRender;
+        if (isFeatured) {
+            itemsToRender = allGalleryItems.filter(item => item.is_featured);
+            featuredItemCount = itemsToRender.length;
+        } else if (!isNaN(day)) {
+            itemsToRender = allGalleryItems.filter(item => item.day === day);
+        } else {
+            return;
+        }
+
+        const limit = parseInt(container.dataset.limit) || itemsToRender.length;
+        itemsToRender = itemsToRender.slice(0, limit);
         
         container.innerHTML = '';
         itemsToRender.forEach((item) => {
-             // Find true index in the current global galleryItems for Lightbox
-             const originalIndex = galleryItems.indexOf(item);
+             const originalIndex = allGalleryItems.indexOf(item);
              const node = makeItemNode(item, originalIndex);
-            container.appendChild(node);
+             container.appendChild(node);
         });
     });
+
+    if (featuredSection) {
+        if (featuredItemCount > 0) featuredSection.classList.remove('hidden');
+        else featuredSection.classList.add('hidden');
+    }
   }
 
   function setupSearch() {
