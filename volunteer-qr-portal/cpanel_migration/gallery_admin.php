@@ -348,7 +348,9 @@
             }
 
             list.innerHTML = [...items].reverse().map(item => {
-                const fullSrc = item.src.startsWith('http') ? item.src : MAIN_SITE_URL + item.src;
+                // Use relative path from /volunteer-qr-portal/cpanel_migration/ to root
+                const imgPath = item.src.startsWith('/') ? '../../' + item.src.substring(1) : '../../' + item.src;
+                const fullSrc = item.src.startsWith('http') ? item.src : imgPath;
                 const filename = item.src.split('/').pop();
                 return `
                 <div class="item-card flex flex-col p-3 bg-gray-900 rounded-xl border border-gray-700 shadow-sm relative group">
