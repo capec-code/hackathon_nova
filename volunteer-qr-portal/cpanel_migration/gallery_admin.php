@@ -309,7 +309,7 @@
 
         async function loadItems() {
             try {
-                const res = await fetch('get_gallery.php');
+                const res = await fetch(`get_gallery.php?_=${Date.now()}`);
                 allGalleryItems = await res.json();
                 filterAndRender();
             } catch (err) {
@@ -348,10 +348,23 @@
             }
 
             list.innerHTML = [...items].reverse().map(item => {
-                // Use relative path from /volunteer-qr-portal/cpanel_migration/ to root
-                const imgPath = item.src.startsWith('/') ? '../../' + item.src.substring(1) : '../../' + item.src;
-                const fullSrc = item.src.startsWith('http') ? item.src : imgPath;
+                // Robustly determine the main site origin
+                const currentOrigin = window.location.origin;
+                const hostname = window.location.hostname;
+                let mainOrigin = currentOrigin;
+                
+                if (hostname.startsWith('admin.')) {
+                    mainOrigin = currentOrigin.replace('admin.', '');
+                } else if (hostname.includes('admin')) {
+                    // Fallback for cases like admin-nova.com if applicable
+                    mainOrigin = currentOrigin.replace('admin', 'www');
+                }
+
+                const fullSrc = item.src.startsWith('http') ? item.src : (mainOrigin + (item.src.startsWith('/') ? '' : '/') + item.src);
                 const filename = item.src.split('/').pop();
+                
+                // Debug log to console (user can see this)
+                console.log(`Rendering Item ${item.id}:`, { src: item.src, fullSrc: fullSrc });
                 return `
                 <div class="item-card flex flex-col p-3 bg-gray-900 rounded-xl border border-gray-700 shadow-sm relative group">
                     <div class="flex items-center justify-between mb-3">
