@@ -52,51 +52,60 @@
         contentWrapper.classList.add('loaded');
     };
 
-    if(item.type === 'image'){
-      const img = document.createElement('img');
-      img.src = item.src;
-      img.alt = item.alt || '';
-      img.loading = 'lazy';
-      img.style.cursor = 'zoom-in';
-      img.onload = reveal;
-      img.addEventListener('click', () => openLightbox(index));
-      contentWrapper.appendChild(img);
-    } else if(item.type === 'video'){
-      const video = document.createElement('video');
-      video.src = item.src;
-      video.controls = false;
-      video.muted = true;
-      video.autoplay = true;
-      video.loop = true;
-      video.preload = 'metadata';
-      if(item.poster) video.poster = item.poster;
-      video.style.cursor = 'zoom-in';
-      video.onloadeddata = reveal;
-      video.addEventListener('click', () => openLightbox(index));
-      contentWrapper.appendChild(video);
-    } else if(item.type === 'youtube'){
-      // YouTube thumbnails load fast, but we'll still use the logic
-      const id = extractYouTubeID(item.src);
-      const thumbUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-      
-      const container = document.createElement('div');
-      container.className = 'relative w-full h-full cursor-pointer group';
-      container.addEventListener('click', () => openLightbox(index));
+    // Use IntersectionObserver for smart loading
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (item.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = item.src;
+                    img.alt = item.alt || '';
+                    img.style.cursor = 'zoom-in';
+                    img.className = 'w-full h-full object-cover';
+                    img.onload = reveal;
+                    img.addEventListener('click', () => openLightbox(index));
+                    contentWrapper.appendChild(img);
+                } else if (item.type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = item.src;
+                    video.controls = false;
+                    video.muted = true;
+                    video.loop = true;
+                    video.preload = 'metadata';
+                    if (item.poster) video.poster = item.poster;
+                    video.style.cursor = 'zoom-in';
+                    video.className = 'w-full h-full object-cover';
+                    video.onloadeddata = reveal;
+                    video.addEventListener('click', () => openLightbox(index));
+                    
+                    // Only play when in view
+                    video.play().catch(() => {}); 
+                    
+                    contentWrapper.appendChild(video);
+                } else if (item.type === 'youtube') {
+                    const id = extractYouTubeID(item.src);
+                    const thumbUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+                    const container = document.createElement('div');
+                    container.className = 'relative w-full h-full cursor-pointer group';
+                    container.addEventListener('click', () => openLightbox(index));
+                    const img = document.createElement('img');
+                    img.src = thumbUrl;
+                    img.alt = item.alt || 'YouTube video';
+                    img.className = 'w-full h-full object-cover';
+                    img.onload = reveal;
+                    const icon = document.createElement('div');
+                    icon.className = 'absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition';
+                    icon.innerHTML = '<i class="fas fa-play-circle text-white text-5xl opacity-80 group-hover:scale-110 transition-transform"></i>';
+                    container.appendChild(img);
+                    container.appendChild(icon);
+                    contentWrapper.appendChild(container);
+                }
+                observer.unobserve(div);
+            }
+        });
+    }, { rootMargin: '200px' });
 
-      const img = document.createElement('img');
-      img.src = thumbUrl;
-      img.alt = item.alt || 'YouTube video';
-      img.className = 'w-full h-full object-cover';
-      img.onload = reveal;
-      
-      const icon = document.createElement('div');
-      icon.className = 'absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition';
-      icon.innerHTML = '<i class="fas fa-play-circle text-white text-5xl opacity-80 group-hover:scale-110 transition-transform"></i>';
-
-      container.appendChild(img);
-      container.appendChild(icon);
-      contentWrapper.appendChild(container);
-    }
+    observer.observe(div);
     
     div.appendChild(contentWrapper);
 

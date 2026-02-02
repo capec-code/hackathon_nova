@@ -384,7 +384,7 @@
                         </div>
                     </div>
                     <div class="aspect-square rounded-lg bg-gray-800 overflow-hidden mb-3 border border-gray-700">
-                        ${item.type === 'image' ? `<img src="${fullSrc}" class="w-full h-full object-cover">` : `<video src="${fullSrc}" class="w-full h-full object-cover"></video>`}
+                        ${item.type === 'image' ? `<img src="${fullSrc}" class="w-full h-full object-cover" loading="lazy">` : `<video src="${fullSrc}" class="w-full h-full object-cover" loading="lazy"></video>`}
                     </div>
                     <div class="px-1">
                         <p class="text-xs font-medium truncate text-gray-300" title="${filename}">${filename}</p>
