@@ -412,6 +412,7 @@
           <a href="pages/announcements.html" class="text-gray-300 hover:text-orange-200 transition">Announcements</a>
           <a href="#themes" class="text-gray-300 hover:text-orange-200 transition">Themes</a>
           <a href="#timeline" class="text-gray-300 hover:text-orange-200 transition">Timeline</a>
+          <a href="#winners" class="text-gray-300 hover:text-orange-200 transition">Winners</a>
           <a href="#prizes" class="text-gray-300 hover:text-orange-200 transition">Prizes</a>
           <a href="#sponsors" class="text-gray-300 hover:text-orange-200 transition">Sponsors</a>
           <a href="pages/gallery.html" class="text-gray-300 hover:text-orange-200 transition">Gallery</a>
@@ -439,6 +440,7 @@
           class="block text-gray-300 hover:text-orange-200 transition py-2">Announcements</a>
         <a href="#themes" class="block text-gray-300 hover:text-orange-200 transition py-2">Themes</a>
         <a href="#timeline" class="block text-gray-300 hover:text-orange-200 transition py-2">Timeline</a>
+        <a href="#winners" class="block text-gray-300 hover:text-orange-200 transition py-2">Winners</a>
         <a href="#prizes" class="block text-gray-300 hover:text-orange-200 transition py-2">Prizes</a>
         <a href="#sponsors" class="block text-gray-300 hover:text-orange-200 transition py-2">Sponsors</a>
         <a href="pages/gallery.html" class="block text-gray-300 hover:text-orange-200 transition py-2">Gallery</a>
@@ -459,7 +461,7 @@
     <div
       class="hidden sm:block absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-blue-600/40 to-purple-600/40 rounded-full blur-3xl"
       style="transform: scale(1.09498) rotate(94.5216deg)"></div>
-    <div class="absolute inset-0 bg-black/40"></div>countdown
+    <div class="absolute inset-0 bg-black/40"></div>
 
     <!-- Interactive Nova Canvas -->
     <canvas id="nova-canvas" class="absolute inset-0 z-0"></canvas>
@@ -493,40 +495,11 @@
         Engineering College, Nepal
       </p>
 
-      <div id="" style="color: oklch(85.2% 0.199 91.936)"
-        class="flex justify-center flex-wrap space-x-4 sm:space-x-8 mb-10 gap-y-4 relative z-20">
-        <div class="text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl font-bold" id="days">
-            00
-          </div>
-          <div class="text-xs sm:text-sm uppercase" style="color: var(--white)">
-            Days
-          </div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl font-bold" id="hours">
-            00
-          </div>
-          <div class="text-xs sm:text-sm uppercase" style="color: var(--white)">
-            Hours
-          </div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl font-bold" id="minutes">
-            00
-          </div>
-          <div class="text-xs sm:text-sm uppercase" style="color: var(--white)">
-            Minutes
-          </div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl sm:text-4xl md:text-5xl font-bold" id="seconds">
-            00
-          </div>
-          <div class="text-xs sm:text-sm uppercase" style="color: var(--white)">
-            Seconds
-          </div>
-        </div>
+      <div class="relative z-20 mb-10">
+        <h3 class="text-3xl sm:text-4xl md:text-5xl font-bold animate-pulse text-orange-500 tracking-wider" style="text-shadow: 0 0 20px rgba(234, 88, 12, 0.4);">
+          Something new and big is cooking...
+        </h3>
+        <p class="text-xl sm:text-2xl mt-4 text-gray-300 font-medium italic">stay tuned</p>
       </div>
 
       <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 px-4 relative z-30">
@@ -1535,6 +1508,61 @@
     </div>
   </section>
 
+  <section id="winners" class="py-20 bg-black/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl sm:text-5xl font-black mb-4">
+          The <span class="gradient-text">Winners</span>
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-green-600 mx-auto mb-6"></div>
+        <p class="text-gray-400 text-lg">Celebrating the brilliant minds of Hackathon Nova 2026</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8 items-end">
+        <!-- 1st Runner Up -->
+        <div class="order-2 md:order-1 bg-white/5 border border-white/10 rounded-2xl p-6 text-center card-hover relative overflow-hidden h-fit mb-4 md:mb-0">
+          <div class="relative mb-6 group">
+            <img src="assets/gallery/IMG_3367.JPG" alt="Team Bhairab" class="w-full h-48 object-cover rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-110" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <i class="fas fa-medal text-gray-300 text-3xl"></i>
+            </div>
+          </div>
+          <h3 class="text-gray-400 font-bold uppercase tracking-widest mb-2 text-sm">1st Runner Up</h3>
+          <h4 class="text-3xl font-black text-white mb-4">Team Bhairab</h4>
+          <div class="inline-block px-4 py-1 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold">SILVER</div>
+        </div>
+
+        <!-- Grand Winner -->
+        <div class="order-1 md:order-2 bg-gradient-to-b from-yellow-500/20 to-transparent border-2 border-yellow-500/50 rounded-2xl p-8 text-center card-hover relative overflow-hidden scale-105 z-10 shadow-[0_0_50px_rgba(234,88,12,0.2)]">
+          <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
+          <div class="relative mb-8 group">
+            <img src="assets/gallery/IMG_3494.JPG" alt="Team USA" class="w-full h-64 object-cover rounded-xl shadow-2xl border-2 border-yellow-500/30 transition-transform duration-500 group-hover:scale-105" />
+            <div class="absolute -top-4 -right-4 bg-yellow-500 text-black w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-4 border-black z-20">
+              <i class="fas fa-crown text-xl"></i>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-yellow-900/40 to-transparent rounded-xl pointer-events-none"></div>
+          </div>
+          <h3 class="text-yellow-500 font-bold uppercase tracking-[0.2em] mb-2 text-sm">Grand Winner</h3>
+          <h4 class="text-5xl font-black text-white mb-6">Team USA</h4>
+          <div class="inline-block px-6 py-2 rounded-full bg-yellow-500 text-black text-sm font-black tracking-widest">GOLD</div>
+        </div>
+
+        <!-- 2nd Runner Up -->
+        <div class="order-3 md:order-3 bg-white/5 border border-white/10 rounded-2xl p-6 text-center card-hover relative overflow-hidden h-fit">
+          <div class="relative mb-6 group">
+            <img src="assets/gallery/IMG_3489.JPG" alt="Team GitHappens" class="w-full h-48 object-cover rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-110" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <i class="fas fa-medal text-orange-600 text-3xl"></i>
+            </div>
+          </div>
+          <h3 class="text-orange-600 font-bold uppercase tracking-widest mb-2 text-sm">2nd Runner Up</h3>
+          <h4 class="text-3xl font-black text-white mb-4">Team GitHappens</h4>
+          <div class="inline-block px-4 py-1 rounded-full bg-orange-600/20 text-orange-600 text-xs font-bold">BRONZE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="prizes" class="py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -2435,43 +2463,6 @@
       });
     });
 
-    // Countdown Timer
-    const countdownDate = new Date("January 27, 2026 09:00:00").getTime();
-
-    const countdown = setInterval(function () {
-      const now = new Date().getTime();
-      const distance = countdownDate - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById("days").innerHTML = String(days).padStart(
-        2,
-        "0"
-      );
-      document.getElementById("hours").innerHTML = String(hours).padStart(
-        2,
-        "0"
-      );
-      document.getElementById("minutes").innerHTML = String(minutes).padStart(
-        2,
-        "0"
-      );
-      document.getElementById("seconds").innerHTML = String(seconds).padStart(
-        2,
-        "0"
-      );
-
-      if (distance < 0) {
-        clearInterval(countdown);
-        document.getElementById("countdown").innerHTML =
-          "<div class='text-2xl font-bold text-cyan-400'>Hackathon is Live!</div>";
-      }
-    }, 1000);
 
     // FAQ Toggle
     document.querySelectorAll(".faq-question").forEach((button) => {
