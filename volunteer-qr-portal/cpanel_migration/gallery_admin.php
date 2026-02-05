@@ -138,6 +138,9 @@
     <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl bg-gray-900 border border-orange-500/50 text-orange-400 shadow-2xl transition-all opacity-0 translate-y-10 z-50 pointer-events-none">
     </div>
 
+    <style>
+        img { image-orientation: from-image; }
+    </style>
     <script>
         const API_KEY = "nova_admin_2026";
         const MAIN_SITE_URL = window.location.origin;
