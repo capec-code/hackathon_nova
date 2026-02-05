@@ -247,7 +247,7 @@
 
     try {
         if (item.type === 'image') {
-            // -- Image Watermarking Logic (Canvas) --
+            // -- Watermarked Download (Canvas) --
             const img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = item.src;
@@ -261,12 +261,8 @@
             canvas.width = img.width;
             canvas.height = img.height;
             const ctx = canvas.getContext('2d');
-
-            // Draw original image
             ctx.drawImage(img, 0, 0);
 
-            // -- Draw Funky Bottom Watermark with Lines --
-            // Responsive sizing: ~2.5% of image width
             const fontSize = Math.max(20, Math.floor(img.width * 0.025)); 
             const text = '< Hackathon Nova 2026 />';
             ctx.font = `bold ${fontSize}px "Courier New", monospace`;
@@ -274,23 +270,19 @@
             const textWidth = textMetrics.width;
             
             const centerX = img.width / 2;
-            const margin = img.height * 0.05; // 5% margin from bottom
+            const margin = img.height * 0.05; 
             const centerY = img.height - margin - (fontSize * 0.9);
             const boxHeight = fontSize * 1.6;
             const boxPadding = fontSize * 0.6;
             const totalBoxWidth = textWidth + (boxPadding * 2);
             
-            // 1. Draw Background Box (Bottom Center)
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; 
             ctx.fillRect(centerX - (totalBoxWidth / 2), centerY - (boxHeight / 2), totalBoxWidth, boxHeight);
-            
-            // 2. Draw Border (Orange)
             ctx.strokeStyle = 'rgba(255, 107, 53, 0.5)';
             ctx.lineWidth = Math.max(2, fontSize * 0.06);
             ctx.strokeRect(centerX - (totalBoxWidth / 2), centerY - (boxHeight / 2), totalBoxWidth, boxHeight);
 
-            // 3. Draw Horizontal Lines
-            const lineWidth = img.width * 0.1; // 10% of image width for side lines
+            const lineWidth = img.width * 0.1;
             ctx.beginPath();
             ctx.moveTo(centerX - (totalBoxWidth / 2) - lineWidth, centerY);
             ctx.lineTo(centerX - (totalBoxWidth / 2), centerY);
@@ -300,56 +292,61 @@
             ctx.lineWidth = Math.max(1, fontSize * 0.04);
             ctx.stroke();
 
-            // 4. Draw Text
             ctx.fillStyle = '#FF6B35'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.shadowColor = '#FF6B35';
-            ctx.shadowBlur = 10;
             ctx.fillText(text, centerX, centerY + (fontSize * 0.05));
-            ctx.shadowBlur = 0;
 
-            // Export and Download
             canvas.toBlob((blob) => {
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                
-                const parts = item.src.split('/');
-                let filename = parts[parts.length-1].split('?')[0] || 'hackathon-nova-gallery';
-                if(!filename.toLowerCase().endsWith('.jpg') && !filename.toLowerCase().endsWith('.png')) filename += '.jpg';
-                
-                link.download = filename;
-                document.body.appendChild(link);
+                const filename = item.src.split('/').pop().split('?')[0] || 'nova-photo.jpg';
+                link.download = "watermarked_" + filename;
                 link.click();
-                document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
             }, 'image/jpeg', 0.95);
 
         } else {
-             // -- Original Logic for Videos --
-            const response = await fetch(item.src);
-            if(!response.ok) throw new Error('Network response was not ok');
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            const parts = item.src.split('/');
-            let filename = parts[parts.length-1].split('?')[0] || 'gallery-video.mp4';
-            
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
+            await downloadRawItem();
         }
     } catch (err) {
-        console.error('Download failed, falling back to new tab:', err);
+        console.error('Download failed:', err);
         window.open(item.src, '_blank');
     } finally {
         btn.innerHTML = originalContent;
         btn.disabled = false;
+    }
+  }
+
+  async function downloadRawItem() {
+    const item = galleryItems[currentIndex];
+    const btn = document.getElementById('lb-download-raw');
+    const originalContent = btn ? btn.innerHTML : '';
+    if(btn) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+    }
+
+    try {
+        const response = await fetch(item.src);
+        if(!response.ok) throw new Error('Network response was not ok');
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = item.src.split('/').pop().split('?')[0] || 'original-file';
+        link.click();
+        window.URL.revokeObjectURL(url);
+    } catch (err) {
+        console.error('Raw download failed:', err);
+        window.open(item.src, '_blank');
+    } finally {
+        if(btn) {
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
     }
   }
 
@@ -497,6 +494,7 @@
     lbPrev = document.getElementById('lb-prev');
     lbNext = document.getElementById('lb-next');
     lbDownload = document.getElementById('lb-download');
+    lbDownloadRaw = document.getElementById('lb-download-raw');
     lbShare = document.getElementById('lb-share');
 
     if(!lightbox) return;
@@ -505,6 +503,7 @@
     lbPrev.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
     lbNext.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
     lbDownload.addEventListener('click', (e) => { e.stopPropagation(); downloadCurrentItem(); });
+    if(lbDownloadRaw) lbDownloadRaw.addEventListener('click', (e) => { e.stopPropagation(); downloadRawItem(); });
     lbShare.addEventListener('click', (e) => { e.stopPropagation(); shareCurrentItem(); });
 
     // Close on background click

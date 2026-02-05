@@ -8,7 +8,8 @@ $gallery_dir = "../../assets/gallery/";
 
 // 2. Get parameters
 $src = isset($_GET['src']) ? $_GET['src'] : '';
-$width = isset($_GET['w']) ? (int)$_GET['w'] : 400;
+$width = isset($_GET['w']) ? (int)$_GET['w'] : 600;
+$quality = isset($_GET['q']) ? (int)$_GET['q'] : 85; // Default quality 85
 
 if (empty($src)) {
     header("HTTP/1.1 400 Bad Request");
@@ -112,9 +113,9 @@ imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $width, $height, $orig_w, $or
 
 // Save to cache
 switch ($mime) {
-    case 'image/jpeg': imagejpeg($dst_img, $cache_path, 80); break;
+    case 'image/jpeg': imagejpeg($dst_img, $cache_path, $quality); break;
     case 'image/png':  imagepng($dst_img, $cache_path); break;
-    case 'image/webp': imagewebp($dst_img, $cache_path, 80); break;
+    case 'image/webp': imagewebp($dst_img, $cache_path, $quality); break;
     case 'image/gif':  imagegif($dst_img, $cache_path); break;
 }
 
