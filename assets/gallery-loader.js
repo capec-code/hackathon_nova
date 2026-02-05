@@ -58,7 +58,9 @@
             if (entry.isIntersecting) {
                 if (item.type === 'image') {
                     const img = document.createElement('img');
-                    img.src = item.src;
+                    // Use thumbnail for grid preview to improve speed significantly
+                    const thumbBase = '/volunteer-qr-portal/cpanel_migration/thumbnail.php';
+                    img.src = `${thumbBase}?w=500&src=${encodeURIComponent(item.src)}`;
                     img.alt = item.alt || '';
                     img.style.cursor = 'zoom-in';
                     img.className = 'w-full h-full object-cover';
